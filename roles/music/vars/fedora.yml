@@ -1,0 +1,5 @@
+---
+__music_pipewire_pulse_package: pipewire-pulseaudio
+__music_pipewire_jack_package: pipewire-jack-audio-connection-kit
+__music_rt_system_setup: realtime-setup
+__music_odin2_package: odin2

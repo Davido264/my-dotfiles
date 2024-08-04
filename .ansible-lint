@@ -1,0 +1,8 @@
+# vim: ft=yaml
+---
+skip_list:
+  - risky-shell-pipe
+  - role-name[path]
+  - var-naming[no-role-prefix]
+  - jinja[spacing]
+  - name[missing]

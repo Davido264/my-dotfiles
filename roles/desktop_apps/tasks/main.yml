@@ -1,0 +1,94 @@
+---
+- block:
+    - name: Perform platform tasks
+      ansible.builtin.include_tasks: '{{ lookup("first_found",__desktop_apps_tasks) }}'
+      vars:
+        __desktop_apps_tasks:
+          files:
+            - '{{ ansible_facts["distribution"] | lower }}.yml'
+          paths:
+            - '{{ role_path }}/tasks'
+
+    - name: Set platform specific vars
+      ansible.builtin.include_vars: '{{ lookup("first_found",__desktop_apps_vars) }}'
+      vars:
+        __desktop_apps_vars:
+          files:
+            - '{{ ansible_facts["distribution" ] | lower }}.yml'
+          paths:
+            - '{{ role_path }}/vars'
+
+    - name: Communication | Install Telegram and Thunderbird
+      ansible.builtin.package:
+        name:
+          - telegram-desktop
+          - thunderbird
+        state: present
+
+    - name: Multimedia | Install MPV Media player
+      ansible.builtin.package:
+        name: mpv
+        state: present
+
+    - name: Tools | Install Alacritty Terminal
+      ansible.builtin.package:
+        name: alacritty
+        state: present
+
+    - name: Apply Alacritty configs
+      tags: dotfiles, dot
+      become: false
+      become_user: '{{ ansible_user }}'
+      stow:
+        dir: '{{ playbook_dir }}/stow'
+        package: alacritty
+        state: supress
+
+    # - name: Tools | Install Kitty Terminal
+    #   ansible.builtin.package:
+    #     name: kitty
+    #     state: present
+    #
+    # - name: Apply Alacritty configs
+    #   tags: dotfiles, dot
+    #   become: false
+    #   become_user: '{{ ansible_user }}'
+    #   stow:
+    #     dir: '{{ playbook_dir }}/stow'
+    #     package: kitty
+    #     state: supress
+
+    - name: Office | Install LibreOffice
+      ansible.builtin.package:
+        name:
+          - '{{ __desktop_apps_libreoffice_package }}'
+          - '{{ __desktop_apps_libreoffice_spanish_lang_package }}'
+          - '{{ __desktop_apps_libreoffice_english_lang_package }}'
+        state: present
+
+    - name: Multimedia | Install OBS Studio
+      ansible.builtin.package:
+        name: obs-studio
+        state: present
+
+    # - name: Drawing | Install Krita, Inkscape and Blender
+    #   ansible.builtin.package:
+    #     name:
+    #       - krita
+    #       - inkscape
+    #       - blender
+    #     state: present
+
+    - name: Tools | Install Okular PDF Reader
+      ansible.builtin.package:
+        name: okular
+        state: present
+
+    - name: Restore mimeapps.list
+      ansible.builtin.copy:
+        src: mimeapps.list
+        dest: /home/{{ ansible_user }}/.config/mimeapps.list
+        mode: '0644'
+  rescue:
+    - ansible.builtin.set_fact:
+        ansible_execution_failed: true

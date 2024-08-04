@@ -1,0 +1,7 @@
+stow/tmux/.config/tmux/plugins/
+stow/neovim/.config/nvim/lua/david/lsp/servers/current.lua
+library/__pycache__/
+**/**/.tar
+**/**/.zst
+**/**/.jpg
+.vaultpass

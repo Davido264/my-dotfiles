@@ -1,0 +1,122 @@
+---
+- block:
+    - name: Set platform specific variables
+      ansible.builtin.include_vars: '{{ lookup("first_found",__devel_vars_paths) }}'
+      vars:
+        __devel_vars_paths:
+          files:
+            - '{{ ansible_facts["distribution"] | lower  }}.yml'
+          paths:
+            - '{{ role_path }}/vars'
+
+    - name: Install dev utils
+      ansible.builtin.package:
+        name:
+          - base-devel
+          - direnv
+          - '{{ __devel_github_cli_package }}'
+          - android-tools
+          - glab
+        state: present
+
+    # TODO: Write this for Mason
+    # - name: Install LSP for PKGBUILD, since Mason doesn't provide it (AUR)
+    #   become_user: '{{ ansible_user }}'
+    #   become: false
+    #   kewlfft.aur.aur:
+    #     name: termux-language-server
+    #     state: present
+
+    - name: Install asdf
+      become_user: '{{ ansible_user }}'
+      become: false
+      ansible.builtin.git:
+        accept_hostkey: true
+        repo: https://github.com/asdf-vm/asdf.git
+        dest: /home/david/.local/share/asdf
+        version: v0.14.0
+
+    - name: Apply ASDF configs
+      tags: dotfiles, dot
+      become: false
+      become_user: '{{ ansible_user }}'
+      stow:
+        dir: '{{ playbook_dir }}/stow'
+        package: asdf
+        state: supress
+
+    - name: Perform V$code tasks
+      ansible.builtin.include_tasks: '{{ lookup("first_found",__devel_vscode_paths) }}'
+      vars:
+        __devel_vscode_paths:
+          files:
+            - 'vscode_{{ ansible_facts["distribution"] | lower }}.yml'
+          paths:
+            - '{{ role_path }}/tasks/gui'
+      when: devel_vscode
+
+    - name: Perform Android Studio tasks
+      ansible.builtin.include_tasks: '{{ lookup("first_found",__devel_android_studio_paths) }}'
+      vars:
+        __devel_android_studio_paths:
+          files:
+            - 'android-studio_{{ ansible_facts["distribution"] | lower }}.yml'
+            - 'android-studio_default.yml'
+          paths:
+            - '{{ role_path }}/tasks/gui'
+      when: devel_android_studio
+
+    - name: Apply IdeaVim (for Android Studio) configs
+      tags: dotfiles, dot
+      become: false
+      become_user: '{{ ansible_user }}'
+      stow:
+        dir: '{{ playbook_dir }}/stow'
+        package: ideavim
+        state: supress
+
+    - name: Validate langs list
+      block:
+        - name: Validate langs list | Get available programming language tasks
+          ansible.builtin.find:
+            paths: '{{ role_path }}/tasks/langs'
+            patterns: '*.yml'
+          register: __devel_langs_files
+
+        - name: Validate langs list | Set facts
+          ansible.builtin.set_fact:
+            __devel_langs: >
+              {{ __devel_langs_files.files
+              | map(attribute="path")
+              | map("basename")
+              | map("regex_replace", "\.yml$", "")
+              | list }}
+
+        - name: Validate langs list | Debug langs list
+          ansible.builtin.debug:
+            var: __devel_langs
+            verbosity: 1
+
+        - name: Validate langs list | Assert all items are available
+          ansible.builtin.assert:
+            that: item in __devel_langs
+            msg: '"{{ item }}" not in {{ __devel_langs }}'
+            quiet: true
+          loop: '{{ devel_langs }}'
+
+    - name: Perform programming language tasks
+      ansible.builtin.include_tasks: '{{ role_path }}/tasks/langs/{{ item }}.yml'
+      with_items: '{{ devel_langs }}'
+
+    # TODO: Don't know, maybe first to mary kondo this
+    # - name: Install Desktop apps (Devel)
+    #   community.general.pacman:
+    #     name:
+    #       - wireshark-qt
+    #       - glade
+    #     state: present
+    #   when: ansible_facts["distribution"] == "Archlinux"
+    #   notify: Add user to wireshark group
+  rescue:
+    - ansible.builtin.set_fact:
+        ansible_execution_failed: true

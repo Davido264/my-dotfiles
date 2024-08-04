@@ -1,0 +1,52 @@
+---
+__devel_github_cli_package: github-cli
+__devel_c_packages:
+  - base-devel
+  - gcc
+  - gcc
+  - glibc
+  - clang
+  - llvm
+  - make
+  - cmake
+  - autoconf
+  - automake
+  - gdb
+__devel_dotnet_package: dotnet-sdk
+__devel_go_package: go
+__devel_java_packages:
+  - jdk21-openjdk
+  - jdk8-openjdk
+__devel_nodejs_lts_package: nodejs-lts-iron
+__devel_npm_package: npm
+__devel_latex_packages:
+  - texlive-basic
+  - texlive-bibtexextra
+  - texlive-bin
+  - texlive-binextra
+  - texlive-context
+  - texlive-fontsextra
+  - texlive-fontsrecommended
+  - texlive-fontutils
+  - texlive-formatsextra
+  - texlive-games
+  - texlive-humanities
+  - texlive-hyphen-spanish
+  - texlive-langspanish
+  - texlive-latex
+  - texlive-latexextra
+  - texlive-latexrecommended
+  - texlive-luatex
+  - texlive-mathscience
+  - texlive-metapost
+  - texlive-music
+  - texlive-pictures
+  - texlive-plaingeneric
+  - texlive-pstricks
+  - texlive-publishers
+  - texlive-xetex
+  - python-pygments
+__devel_python_prefix: python
+__devel_rust_packages:
+  - rust
+  - rust-src

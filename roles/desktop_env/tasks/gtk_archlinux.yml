@@ -1,0 +1,28 @@
+# vim: ft=yaml.ansible
+- name: Install Kvantum to apply GTK themes to Qt
+  ansible.builtin.package:
+    name:
+      - kvantum
+      - kvantum-qt5
+    state: present
+
+- name: Install GTK theme for Qt apps
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name: kvantum-theme-libadwaita-git
+    state: present
+
+- name: Install Matugen (AUR)
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name: matugen-bin
+    state: present
+
+- name: Install GTK themes (AUR)
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name: adw-gtk3
+    state: present

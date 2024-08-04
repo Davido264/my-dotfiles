@@ -1,0 +1,75 @@
+---
+- name: Install Gnome pkgs
+  ansible.builtin.package:
+    name:
+      - baobab
+      - gdm
+      - gnome-backgrounds
+#     - gnome-calculator
+      - gnome-calendar
+      - gnome-characters
+#     - gnome-clocks
+      - gnome-color-manager
+#     - gnome-connections
+#     - gnome-console
+#     - gnome-contacts
+      - gnome-control-center
+      - gnome-disk-utility
+      - gnome-font-viewer
+      - gnome-keyring
+      - gnome-logs
+#     - gnome-maps
+      - gnome-menus
+#     - gnome-music
+#     - gnome-remote-desktop
+      - gnome-session
+      - gnome-settings-daemon
+      - gnome-shell
+#     - gnome-software
+#     - gnome-system-monitor
+#     - gnome-text-editor
+#     - gnome-tour
+#     - gnome-user-docs
+      - gnome-user-share
+#     - gnome-weather
+#     - grilo-plugins
+      - gvfs
+      - gvfs-afc
+#     - gvfs-goa
+#     - gvfs-gphoto2
+      - gvfs-mtp
+      - gvfs-nfs
+      - gvfs-smb
+      - libgnome-keyring
+      - loupe
+#     - malcontent
+      - nautilus
+#     - orca
+#     - rygel
+      - simple-scan
+      - snapshot
+      - sushi
+#     - tecla
+#     - totem
+#     - '{{ __desktop_env_python_tracker_miners_package }}'
+      - xdg-desktop-portal-gnome
+      - xdg-user-dirs-gtk
+#     - yelp
+      - sound-theme-freedesktop
+      - mpv
+      - mpv-mpris
+      - nvtop
+      - gnome-tweaks
+    state: present
+  notify: Ensure GDM is enabled
+
+# TODO: Install caffeine and fullscreen-to-new-workspace extensions on fedora
+- name: Install extensions (AUR)
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name:
+      - gnome-shell-extension-fullscreen-to-new-workspace-git
+      - gnome-shell-extension-caffeine-git
+    state: present
+  when: ansible_facts["distribution"] == "Archlinux"

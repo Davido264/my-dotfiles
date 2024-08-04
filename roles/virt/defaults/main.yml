@@ -1,0 +1,6 @@
+---
+virt_vms: false
+# intel | amd
+virt_cpu: intel
+virt_containers: false
+virt_distrobox: '{{ virt_containers }}'

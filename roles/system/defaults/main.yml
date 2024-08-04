@@ -1,0 +1,4 @@
+---
+system_hostname: laptop
+system_udev_android: true
+system_udev_remap_home_esc: false

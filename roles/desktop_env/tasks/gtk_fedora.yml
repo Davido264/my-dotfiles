@@ -1,0 +1,19 @@
+# vim: ft=yaml.ansible
+- name: Install Matugen
+  block:
+    - name: Install Matugen | Install Cargo
+      ansible.builtin.dnf:
+        name: cargo
+        state: present
+
+    - name: Install Matugen | Install Matugen using Cargo
+      community.general.cargo:
+        name: matugen
+        state: present
+        locked: true
+        path: /usr
+
+- name: Install GTK themes
+  ansible.builtin.dnf:
+    name: adw-gtk3-theme
+    state: present

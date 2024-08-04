@@ -1,0 +1,49 @@
+#!/bin/sh
+
+# Took inspiration from
+# https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-sessionizer
+# and
+# https://arthurjordao.dev/posts/tmux-tmuxinator-fzf-workflow/
+
+selected=$(find -L ~/Source \
+	~/Source/personal \
+	~/Source/UTA \
+	~/Source/Mivilsoft \
+	~/Documents \
+	~/Documents/personal \
+	~/Documents/UTA \
+	~/Documents/UTA/seguridad_ti \
+	~/Documents/UTA/auditoria_ti \
+	~/Documents/UTA/servidores \
+	~/Documents/Mivilsoft \
+	~/Documents/archived \
+	~/Documents/tmp \
+	~/Documents/notebook \
+	~/Music \
+	~/Music/Sessions \
+	~/Music/projects \
+	~/Music/Library \
+	~/Pictures/tmp \
+	~/Pictures \
+	~/Videos/tmp \
+	~/Documents/personal/backups \
+	~/Documents/archived \
+	~/Documents/tmp \
+	-mindepth 1 -maxdepth 1 -type d 2>/dev/null | fzf +m -1 -q "$1")
+
+if [ -z "$selected" ]; then
+	exit 0
+fi
+
+echo "$selected"
+#selected_name=$(basename "$(dirname "$selected")" | tr . _)/$(basename "$selected" | tr . _)
+#tmux_config_file="$selected/.tmuxinator.yml"
+#
+#if [ -f "$tmux_config_file" ]; then
+#	cd "$selected" 2>/dev/null 1>&2
+#	tmuxinator local
+#	# shellcheck disable=SC2103
+#	cd - 2>/dev/null 1>&2
+#else
+#	tmuxinator start default -n "$selected_name" workspace="$selected"
+#fi

@@ -1,0 +1,123 @@
+---
+- name: Hyprland Block (grouped to only run when os is Arch)
+  when: ansible_facts["distribution"] == "Archlinux"
+  block:
+    - name: Install Bluethooth utils
+      community.general.pacman:
+        name:
+          - bluez
+          - bluez-utils
+          - blueman
+        state: present
+      notify: Ensure bluetooth active
+
+    - name: Install Hyprland pkgs
+      community.general.pacman:
+        name:
+          - cliphist
+          - grim
+          - gvfs # Gnome virtual file system
+          - gvfs-mtp  # android access on file manager
+          - gvfs-afc
+          - gvfs-dnssd
+          - gvfs-nfs
+          - gvfs-smb
+          - gvfs-wsdd
+          - hypridle
+          - hyprlock
+          - imagemagick
+          - wl-clipboard
+          - xclip
+          - kitty
+          - kvantum
+          - network-manager-applet
+          - pamixer
+          - pavucontrol
+          - playerctl
+          - polkit-gnome
+          - python-requests
+          - qt5ct
+          - qt5-wayland
+          - qt6ct
+          - qt6-svg
+          - qt6-wayland
+          - rofi-wayland
+          - slurp
+          - sound-theme-freedesktop
+          - swappy
+          - mako
+          - waybar
+          - xdg-desktop-portal-gtk
+          - xdg-desktop-portal-hyprland
+          - yad
+          - brightnessctl
+          - eog # Image viewer
+          - mpv
+          - mpv-mpris
+          - thunar
+          - thunar-volman
+          - tumbler
+          - ffmpegthumbnailer
+          - thunar-archive-plugin
+          - hyprland # THE GOAT
+        state: present
+
+    - name: Install Hyprland pkgs (AUR)
+      become: true
+      become_user: '{{ ansible_user }}'
+      kewlfft.aur.aur:
+        name:
+          - nwg-displays
+          - nwg-look-bin
+          - swww
+          - pyprland
+        state: present
+
+    - name: Install AGS deps
+      community.general.pacman:
+        name:
+          - upower
+          - gnome-bluetooth-3.0
+          - gvfs
+          - power-profiles-daemon
+          - libdbusmenu-gtk3
+          - sass
+          - brightnessctl
+        state: present
+
+    - name: Install AGS (AUR)
+      become: true
+      become_user: '{{ ansible_user }}'
+      kewlfft.aur.aur:
+        name:
+          - aylurs-gtk-shell
+        state: present
+
+    - name: Install SDDM
+      community.general.pacman:
+        name:
+          - qt6-5compat
+          - qt6-declarative
+          - qt6-svg
+          - sddm
+        state: present
+      notify:
+        - Enable SDDM
+
+    - name: Apply Hyprland configs and install scripts
+      tags: dotfiles, dot
+      become: false
+      become_user: '{{ ansible_user }}'
+      stow:
+        dir: '{{ playbook_dir }}/stow'
+        package: hyprland
+        state: supress
+
+    - name: Apply Rofi configs
+      tags: dotfiles, dot
+      become: false
+      become_user: '{{ ansible_user }}'
+      stow:
+        dir: '{{ playbook_dir }}/stow'
+        package: rofi
+        state: supress

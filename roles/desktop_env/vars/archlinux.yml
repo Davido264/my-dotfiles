@@ -1,0 +1,5 @@
+---
+__desktop_env_psutil_package: python-psutil
+__desktop_env_base_devel_package: base-devel
+__desktop_env_python_pyquery_package: python-pyquery
+__desktop_env_python_tracker_miners_package: tracker3-miners

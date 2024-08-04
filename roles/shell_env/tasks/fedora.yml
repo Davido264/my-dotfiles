@@ -1,0 +1,26 @@
+---
+- name: Enable repository for gum
+  ansible.builtin.blockinfile:
+    path: /etc/yum.repos.d/charm.repo
+    create: true
+    block: |
+      [charm]
+      name=Charm
+      baseurl=https://repo.charm.sh/yum/
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://repo.charm.sh/yum/gpg.key
+    mode: '0644'
+  when: shell_env_mode != 'minimal'
+
+- name: Enable bitwarden-cli copr
+  community.general.copr:
+    name: aptupdate/bitwarden-cli
+    state: enabled
+  when: shell_env_mode != 'minimal'
+
+- name: Enable onefetch copr
+  community.general.copr:
+    name: varlad/onefetch
+    state: enabled
+  when: shell_env_mode == 'fancy'

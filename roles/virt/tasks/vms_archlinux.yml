@@ -1,0 +1,16 @@
+---
+- name: Virtual Machines | Install KVM, libvirt, guesttools and virt-manager
+  community.general.pacman:
+    name:
+      - libvirt
+      - guestfs-tools
+      - libguestfs
+      - virt-manager
+      - dnsmasq         # (opt) required for default NAT/DHCP for guests
+      - iptables-nft    # (opt) required for default NAT networking
+      - lvm2            # (opt) Logical Volume Manager support
+      - openbsd-netcat  # (opt) for remote management over ssh
+      - sshpass         # (opt) ansible autologin on a vm over ssh
+      - libosinfo       # osinfo-query command
+      - osinfo-db-tools # osinfo db tools
+    state: present

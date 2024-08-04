@@ -1,0 +1,6 @@
+---
+# gnome | hyprland
+desktop_env_provider: gnome
+
+# amd | nvidia | integrated
+desktop_env_graphics_provider: integrated

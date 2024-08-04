@@ -1,0 +1,45 @@
+---
+- name: XDG Directories tasks | Remove existing directories
+  ansible.builtin.file:
+    name: '{{ item }}'
+    state: absent
+  with_items:
+    - /home/{{ ansible_user }}/Descargas
+    - /home/{{ ansible_user }}/Documentos
+    - /home/{{ ansible_user }}/Escritorio
+    - /home/{{ ansible_user }}/Público
+    - /home/{{ ansible_user }}/Plantillas
+    - /home/{{ ansible_user }}/Música
+    - /home/{{ ansible_user }}/Imágenes
+    - /home/{{ ansible_user }}/Vídeos
+
+- name: XDG Directories tasks | Create english named directories
+  ansible.builtin.file:
+    name: '{{ item }}'
+    state: directory
+    mode: '0755'
+  with_items:
+    - /home/{{ ansible_user }}/Downloads
+    - /home/{{ ansible_user }}/Documents
+    - /home/{{ ansible_user }}/Desktop
+    - /home/{{ ansible_user }}/Public
+    - /home/{{ ansible_user }}/Templates
+    - /home/{{ ansible_user }}/Music
+    - /home/{{ ansible_user }}/Pictures
+    - /home/{{ ansible_user }}/Videos
+
+- name: XDG Directories tasks | Create aditional Directories
+  ansible.builtin.file:
+    name: '{{ item }}'
+    state: directory
+    mode: '0755'
+  with_items:
+    - /home/{{ ansible_user }}/Backups
+    - /home/{{ ansible_user }}/Source
+
+- name: XDG Directories tasks | Update XDG User Dirs
+  ansible.builtin.command:
+    cmd: xdg-user-dirs-update --force
+  changed_when: true
+  environment:
+    LC_ALL: C.UTF-8

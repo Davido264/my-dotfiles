@@ -1,0 +1,5 @@
+---
+__music_pipewire_pulse_package: pipewire-pulse
+__music_pipewire_jack_package: pipewire-jack
+__music_rt_system_setup: realtime-privileges
+__music_odin2_package: odin2-synthesizer

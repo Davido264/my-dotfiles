@@ -1,0 +1,38 @@
+---
+# TODO: Gaming on fedora
+- block:
+    - name: Perform system setup tasks
+      ansible.builtin.include_tasks: '{{ lookup("first_found",__gaming_syssetup_paths) }}'
+      vars:
+        __gaming_syssetup_paths:
+          files:
+            - 'system-setup_{{ ansible_facts["distribution"] | lower }}.yml'
+          paths:
+            - '{{ role_path }}/tasks'
+          skip: true
+
+    - name: Install lutris
+      community.general.pacman:
+        name: lutris
+        state: present
+      notify: Download custom icons
+
+    - name: Install PrismLauncher (AUR)
+      become: true
+      become_user: '{{ ansible_user }}'
+      kewlfft.aur.aur:
+        name: prismlauncher
+        state: present
+
+    - name: Install Osu! (AUR)
+      become: true
+      become_user: '{{ ansible_user }}'
+      kewlfft.aur.aur:
+        name: osu-lazer-bin
+        state: present
+
+    - name: Import ssf2 tasks
+      ansible.builtin.include_tasks: ssf2.yml
+  rescue:
+    - ansible.builtin.set_fact:
+        ansible_execution_failed: true

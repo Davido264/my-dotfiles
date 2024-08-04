@@ -1,0 +1,22 @@
+---
+- name: Install Reaper
+  community.general.pacman:
+    name: reaper
+    state: present
+
+- name: Install Giada (AUR)
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name: giada
+    state: present
+
+- name: Install CHOW, Vital and TAL Noise Maker
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name:
+      - chowtapemodel-bin
+      - vital-synth
+      - tal-noisemaker-bin # :O
+    state: present

@@ -1,0 +1,20 @@
+---
+- name: Set default shell
+  ansible.builtin.user:
+    update_password: on_create
+    name: '{{ ansible_user }}'
+    shell: /usr/bin/{{ shell_env_default_shell }}
+    append: true
+
+- name: Set neovim as $EDITOR for all users
+  ansible.builtin.lineinfile:
+    path: /etc/environment
+    regexp: '^EDITOR=.*'
+    line: 'EDITOR=nvim'
+    state: present
+  when: shell_env_nvim_global
+
+- name: Remove starship install script
+  ansible.builtin.file:
+    path: '{{ __shell_env_tmp_path.path }}'
+    state: absent

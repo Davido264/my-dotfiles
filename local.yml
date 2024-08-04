@@ -1,0 +1,56 @@
+---
+- name: My laptop setup
+  hosts: local
+  connection: local
+  become: true
+  vars_files:
+    - '{{ playbook_dir }}/vars/desktop_workstation.yml'
+
+  pre_tasks:
+    - name: Install stow
+      tags: dotfiles, dot, all
+      ansible.builtin.package:
+        name: stow
+        state: present
+
+    - name: Grant `sudo pacman` without a password to `david`
+      community.general.sudoers:
+        name: aur_builder
+        state: present
+        commands:
+          - /usr/bin/pacman
+        nopassword: true
+        user: '{{ ansible_user }}'
+      when: ansible_facts["distribution"] == "Archlinux"
+
+  post_tasks:
+    - name: Revoke `sudo pacman` without a password to user
+      community.general.sudoers:
+        name: aur_builder
+        state: absent
+      when: ansible_facts["distribution"] == "Archlinux"
+
+  roles:
+    - role: system
+      tags: system
+    - role: desktop_env
+      tags: desktop, desktop_env
+    - role: shell_env # pending (tmux/zellij and neovim)
+      tags: shell, shell_env, apps
+    - role: devel
+      tags: devel
+    - role: desktop_apps
+      tags: desktop_apps, apps
+    - role: gaming
+      tags: gaming, games
+    - role: music
+      tags: music, music
+    - role: virt
+      tags: virt, containers, vm
+
+
+- name: Notify results
+  hosts: local
+  connection: local
+  roles:
+    - notifications

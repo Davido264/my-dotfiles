@@ -1,0 +1,123 @@
+---
+- block:
+    - name: Perform platform tasks
+      ansible.builtin.include_tasks: '{{ lookup("first_found",__system_setup_paths) }}'
+      vars:
+        __system_setup_paths:
+          files:
+            - '{{ ansible_facts["distribution"] | lower }}.yml'
+          paths:
+            - '{{ role_path }}/tasks'
+
+    - name: Set hostname
+      ansible.builtin.hostname:
+        name: '{{ system_hostname }}'
+
+    - name: Set Timezone
+      community.general.timezone:
+        name: America/Guayaquil
+
+    - name: Setup Locale
+      community.general.locale_gen:
+        name: es_MX.UTF-8
+        state: present
+      when: ansible_facts["distribution"] != "Fedora"
+
+    - name: Use Altgr and Caps -> Ctrl
+      ansible.builtin.copy:
+        src: xkb.layout
+        dest: /etc/X11/xorg.conf.d/99-keymaps.conf
+        owner: root
+        group: root
+        mode: '0444'
+
+    - name: Create base groups
+      ansible.builtin.group:
+        name: '{{ item }}'
+        state: present
+      loop:
+        - networkmanager
+        - power
+
+    - name: Setup users
+      ansible.builtin.user:
+        name: '{{ ansible_user }}'
+        update_password: on_create
+        append: true
+        groups:
+          - users
+          - wheel
+          - networkmanager
+          - power
+
+    - name: Include Android Udev tasks
+      ansible.builtin.include_tasks: '{{ lookup("first_found", __system_udev_android_tasks) }}'
+      when: system_udev_android
+      vars:
+        __system_udev_android_tasks:
+          files:
+            - 'udev_android_{{ ansible_facts["distribution"] | lower }}.yml'
+            - 'udev_android_default.yml'
+          paths:
+            - '{{ role_path }}/tasks'
+
+    - name: Map HOME_PAGE to ESC
+      when: system_udev_remap_home_esc
+      ansible.builtin.copy:
+        src: btkb_homepage_to_esc
+        dest: /etc/udev/hwdb.d/99-btkb_homepage_to_esc.hwdb
+        owner: root
+        mode: '0644'
+
+    - name: Include XDG Variables in /etc/security/pam_env.conf
+      ansible.builtin.blockinfile:
+        path: /etc/security/pam_env.conf
+        block: |
+          XDG_CONFIG_HOME   DEFAULT=@{HOME}/.config
+          XDG_CACHE_HOME    DEFAULT=@{HOME}/.cache
+          XDG_DATA_HOME     DEFAULT=@{HOME}/.local/share
+          XDG_STATE_HOME    DEFAULT=@{HOME}/.local/state
+        state: present
+
+    - name: Avoid firewall-applet on Arch
+      ansible.builtin.lineinfile:
+        line: NoExtract=etc/xdg/autostart/firewall-applet.desktop
+        path: /etc/pacman.conf
+        insertafter: '#NoExtract   ='
+      when: ansible_facts["distribution"] == "Archlinux"
+      notify: Remove firewall-applet from autostart
+
+    - name: Install firewalld
+      ansible.builtin.package:
+        name: firewalld
+        state: present
+      notify: Ensure firewalld is running
+
+    - name: Set vconsole keymap to us-acentos
+      community.general.ini_file:
+        path: /etc/vconsole.conf
+        option: KEYMAP
+        value: us-acentos
+        mode: '0644'
+
+    - name: Apply systemd configs
+      tags: dotfiles, dot
+      become: false
+      become_user: '{{ ansible_user }}'
+      stow:
+        dir: '{{ playbook_dir }}/stow'
+        package: systemd
+        state: supress
+
+    # TODO: Detect android/termux with ansible_facts
+    # - name: Apply termux configs
+    #   tags: dotfiles, dot
+    #   become: false
+    #   become_user: '{{ ansible_user }}'
+    #   stow:
+    #     dir: '{{ playbook_dir }}/stow'
+    #     package: termux
+    #     state: supress
+  rescue:
+    - ansible.builtin.set_fact:
+        ansible_execution_failed: true

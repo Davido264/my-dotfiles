@@ -1,0 +1,6 @@
+---
+- name: Install Android Udev Rules
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/ublue-os/android-udev-rules/main/51-android.rules
+    mode: '0644'
+    dest: /etc/udev/rules.d/51-android.rules

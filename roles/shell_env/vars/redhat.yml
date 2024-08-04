@@ -1,0 +1,4 @@
+---
+__shell_env_bind_utils_package: bind-utils
+__shell_env_pandoc_package: pandoc
+__shell_env_imagemagick_package: ImageMagick

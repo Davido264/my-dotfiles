@@ -1,0 +1,5 @@
+---
+- name: C/C++ | Install C/C++ packages
+  ansible.builtin.package:
+    name: '{{ __devel_c_packages }}'
+    state: present

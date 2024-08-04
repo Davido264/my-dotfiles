@@ -1,0 +1,35 @@
+---
+ansible_python_interpreter: auto_silent
+ansible_user: david
+ansible_remote_tmp: /tmp
+
+virt_vms: true
+virt_cpu: intel # intel | amd
+virt_nested_virt: true
+virt_containers: true
+
+devel_gui: true
+devel_vscode: true
+devel_android_studio: true
+devel_langs:
+  - c
+  - clojure
+  # - dotnet
+  # - flutter
+  - go
+  - java
+  - javascript
+  - kotlin
+  - latex
+  - python
+  - rust
+
+system_hostname: aspiref5
+system_udev_android: true
+system_udev_remap_home_esc: true
+
+shell_env_default_shell: zsh
+shell_env_mode: fancy # minimal | normal | fancy
+shell_env_nvim_global: true
+
+desktop_env_provider: gnome # gnome | hyprland

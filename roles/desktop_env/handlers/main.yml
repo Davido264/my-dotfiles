@@ -1,0 +1,28 @@
+---
+- name: Ensure GDM is enabled
+  ansible.builtin.service:
+    name: gdm
+    enabled: true
+  register: __desktop_env_gdm_status
+  until: __desktop_env_gdm_status is success
+  retries: 15
+  delay: 2
+
+- name: Ensure bluetooth active
+  ansible.builtin.service:
+    name: bluetooth
+    enabled: true
+    state: started
+  register: __desktop_env_bluetooth_status
+  until: __desktop_env_bluetooth_status is success
+  retries: 15
+  delay: 2
+
+- name: Enable SDDM
+  ansible.builtin.service:
+    name: sddm
+    enabled: true
+  register: __desktop_env_sddm_status
+  until: __desktop_env_sddm_status is success
+  retries: 15
+  delay: 2

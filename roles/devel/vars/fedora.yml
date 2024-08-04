@@ -1,0 +1,40 @@
+---
+__devel_github_cli_package: gh
+__devel_c_packages:
+  - '@Development Tools'
+  - '@Development Libraries'
+  - gcc
+  - clang
+  - gcc-c++
+  - autoconf
+  - automake
+  - cmake
+  - glibc
+__devel_dotnet_package: dotnet
+__devel_go_package: golang
+__devel_java_packages:
+  - java-21-openjdk-devel
+  - java-21-openjdk-headless
+  - java-1.8.0-openjdk-devel
+  - java-1.8.0-openjdk-headless
+__devel_nodejs_lts_package: nodejs
+__devel_npm_package: nodejs-npm
+__devel_latex_packages:
+  - texlive-scheme-medium
+  - texlive-binarytree
+  - texlive-context
+  - texlive-hyphen-spanish
+  - texlive-latex
+  - texlive-luatex
+  - texlive-metapost
+  - texlive-musical
+  - texlive-pstricks
+  - texlive-xetex
+  - python3-pygments
+__devel_python_prefix: python3
+__devel_rust_packages:
+  - rust
+  - cargo
+  - clippy
+  - rust-src
+  - rustfmt

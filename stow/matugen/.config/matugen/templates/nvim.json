@@ -1,0 +1,12 @@
+{<* for name, value in colors *>
+  "{{name}}": "{{value.default.hex}}",
+<* endfor *>
+  "black" :  "{{colors.surface.default.hex}}",
+  "red" : "{{colors.red.default.hex}}",
+  "green" : "{{colors.green.default.hex}}",
+  "yellow" : "{{colors.yellow.default.hex}}",
+  "blue" : "{{colors.blue.default.hex}}",
+  "magenta" : "{{colors.magenta.default.hex}}",
+  "cyan" : "{{colors.cyan.default.hex}}",
+  "white" : "{{colors.on_surface.dark.hex}}"
+}

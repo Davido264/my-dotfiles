@@ -1,0 +1,17 @@
+---
+- name: Java | Install Java packages
+  ansible.builtin.package:
+    name: '{{ __devel_java_packages }}'
+    state: present
+
+- name: Java | Add Java ASDF Plugin
+  become_user: '{{ ansible_user }}'
+  become: false
+  ansible.builtin.shell:
+    executable: /bin/sh
+    cmd: >
+      export ASDF_DIR="$HOME/.local/share/asdf";
+      . "$HOME/.local/share/asdf/asdf.sh";
+      asdf plugin add java &&
+      asdf global java system
+    creates: /home/{{ ansible_user }}/.local/share/asdf/plugins/java

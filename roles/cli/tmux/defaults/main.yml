@@ -1,0 +1,2 @@
+# vim: ft=yaml.ansible
+cli_tmux_tmuxinator_enable: false

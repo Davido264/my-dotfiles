@@ -1,0 +1,36 @@
+---
+- name: Perform platform tasks
+  ansible.builtin.include_tasks: '{{ lookup("first_found",__desktop_env_gtk_paths) }}'
+  vars:
+    __desktop_env_gtk_paths:
+      files:
+        - 'gtk_{{ ansible_facts["distribution" ] | lower }}.yml'
+      paths:
+        - '{{ role_path }}/tasks'
+
+- name: Apply GTK settings
+  tags: dotfiles, dot
+  become_user: '{{ ansible_user }}'
+  become: true
+  block:
+    - name: Apply GTK settings | Set default colorscheme
+      community.general.dconf:
+        key: /org/gnome/desktop/interface/color-scheme
+        value: "'prefer-dark'"
+
+    - name: Apply GTK settings | Set GTK theme
+      community.general.dconf:
+        key: /org/gnome/desktop/interface/gtk-theme
+        value: "'adw-gtk3-dark'"
+
+    - name: Apply GTK settings | Stow Matugen configs
+      stow:
+        dir: '{{ playbook_dir }}/stow'
+        package: matugen
+        state: supress
+
+    - name: Apply GTK settings | Stow theme configs
+      stow:
+        dir: '{{ playbook_dir }}/stow'
+        package: gtk
+        state: supress

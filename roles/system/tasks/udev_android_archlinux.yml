@@ -1,0 +1,6 @@
+---
+- name: Install Android Udev Rules
+  community.general.pacman:
+    name:
+      - android-udev
+    state: present

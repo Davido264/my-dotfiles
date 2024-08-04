@@ -1,0 +1,8 @@
+---
+- name: Install Android Studio (AUR)
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name:
+      - android-studio
+    state: present

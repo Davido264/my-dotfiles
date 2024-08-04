@@ -1,0 +1,21 @@
+---
+- name: Create temp directory for starship script
+  ansible.builtin.tempfile:
+    prefix: starship_installation_ansible
+    state: directory
+  register: __shell_env_tmp_path
+  notify: Remove starship installation temp file
+
+- name: Download starship script
+  ansible.builtin.get_url:
+    url: https://starship.rs/install.sh
+    mode: '0700'
+    dest: '{{ __shell_env_tmp_path.path }}/starship-install.sh'
+  register: starship_download
+
+- name: Execute starship script
+  ansible.builtin.command:
+    cmd: '{{ __shell_env_tmp_path.path }}/starship-install.sh --yes'
+    creates: /usr/local/bin/starship
+  register: starship_install
+  when: starship_download is succeeded

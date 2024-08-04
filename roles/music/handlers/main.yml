@@ -1,0 +1,4 @@
+---
+- name: System setup | Show msg
+  ansible.builtin.debug:
+    msg: Computer needs restart or relogin

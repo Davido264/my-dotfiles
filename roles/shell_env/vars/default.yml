@@ -1,0 +1,4 @@
+---
+__shell_env_bind_utils_package: dnsutils
+__shell_env_pandoc_package: pandoc-cli
+__shell_env_imagemagick_package: imagemagick

@@ -1,0 +1,37 @@
+---
+- block:
+    - name: Virtual Machines
+      notify:
+        - Enable libvirt service
+        - Enable nested virtualization
+        - Setting libvirt and kvm groups
+        - Add user to /etc/libvirt/libvirtd.conf
+        - Add kvm group to /etc/libvirt/qemu.conf
+      when: virt_vms
+      block:
+        - name: Virtual Machines | Perform platform tasks
+          ansible.builtin.include_tasks: '{{ lookup("first_found",__virt_vm_paths) }}'
+          vars:
+            __virt_vm_paths:
+              files:
+                - 'vms_{{ ansible_facts["distribution"] | lower }}.yml'
+              paths:
+                - '{{ role_path }}/tasks'
+
+    - name: Containers
+      block:
+        - name: Containers | Install Podman for containers
+          ansible.builtin.package:
+            name:
+              - podman
+              - podman-compose
+            state: present
+
+        - name: Containers | Install distrobox
+          ansible.builtin.package:
+            name: distrobox
+            state: present
+          when: virt_distrobox
+  rescue:
+    - ansible.builtin.set_fact:
+        ansible_execution_failed: true

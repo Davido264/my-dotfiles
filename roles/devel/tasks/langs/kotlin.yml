@@ -1,0 +1,14 @@
+---
+- name: Kotlin | Include java tasks
+  ansible.builtin.include_tasks: '{{ role_path }}/tasks/langs/java.yml'
+
+- name: Kotlin | Enable Kotlin COPR
+  community.general.copr:
+    name: goncalossilva/kotlin
+    state: enabled
+  when: ansible_facts["distribution"] == "Fedora"
+
+- name: Kotlin | Install Kotlin
+  ansible.builtin.package:
+    name: kotlin
+    state: present

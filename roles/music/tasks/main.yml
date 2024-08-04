@@ -1,0 +1,72 @@
+---
+- block:
+    - name: Set platform specific variables
+      ansible.builtin.include_vars: '{{ lookup("first_found",__music_vars_path) }}'
+      vars:
+        __music_vars_path:
+          files:
+            - '{{ ansible_facts["distribution"] | lower  }}.yml'
+          paths:
+            - '{{ role_path }}/vars'
+
+    - name: Setup system
+      block:
+        - name: System setup | Install pipewire pkgs
+          ansible.builtin.package:
+            name:
+              - pipewire
+              - wireplumber
+              - pipewire-alsa
+              - '{{ __music_pipewire_pulse_package }}'
+              - '{{ __music_pipewire_jack_package }}'
+            state: present
+
+        - name: System setup | Install pavucontrol
+          ansible.builtin.package:
+            name: pavucontrol
+            state: present
+
+        # There are __music_rt_system_setup packages in fedora and
+        # arch, they setups audio limits, udev rules and create a
+        # "realtime" group
+        - name: System setup | Install realtime system setup package
+          ansible.builtin.package:
+            name:
+              - '{{ __music_rt_system_setup }}'
+              - rtkit
+            state: present
+
+        - name: System setup | Increase the maximum watches on files (for DAWS)
+          ansible.builtin.lineinfile:
+            path: /etc/sysctl.d/10-max_user_watches.conf
+            line: fs.inotify.max_user_watches=60000
+            mode: '0644'
+            create: true
+
+        - name: System setup | Modify swappiness
+          ansible.builtin.lineinfile:
+            path: /etc/sysctl.d/90-swappiness.conf
+            line: vm.swappiness = 30
+            mode: '0644'
+            create: true
+
+        - name: System setup | Ensure realtime group exists
+          ansible.builtin.group:
+            name: realtime
+            state: present
+
+        - name: System setup | Add user to realtime group
+          ansible.builtin.user:
+            name: '{{ ansible_user }}'
+            append: true
+            groups:
+              - realtime
+            update_password: on_create
+          notify: System setup | Show msg
+
+    - name: Install Music apps
+      ansible.builtin.include_tasks:
+        file: music-apps.yml
+  rescue:
+    - ansible.builtin.set_fact:
+        ansible_execution_failed: true

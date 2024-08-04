@@ -1,0 +1,128 @@
+---
+- name: Browser | Install Brave Browser
+  block:
+    - name: Add brave rpm key
+      ansible.builtin.rpm_key:
+        key: 'https://brave-browser-rpm-release.s3.brave.com/brave-core.asc'
+
+    - name: Add Brave repository
+      ansible.builtin.yum_repository:
+        baseurl: 'https://brave-browser-rpm-release.s3.brave.com/x86_64/'
+        description: "Brave repository"
+        gpgcheck: true
+        gpgkey: 'https://brave-browser-rpm-release.s3.brave.com/brave-core.asc'
+        name: brave-browser
+        repo_gpgcheck: true
+
+    - name: Browser | Install Brave Browser | Install Brave
+      ansible.builtin.dnf:
+        name: brave-browser
+        state: present
+
+- name: Editor | Install Neovide
+  block:
+    - name: Editor | Install Neovide | Install build dependencies
+      ansible.builtin.dnf:
+        name:
+          - fontconfig-devel
+          - freetype-devel
+          - libX11-xcb
+          - libX11-devel
+          - libstdc++-static
+          - libstdc++-devel
+          - '@Development Tools'
+          - '@Development Libraries'
+          - cargo
+          - git
+
+    - name: Editor | Install Neovide | Clone source code
+      ansible.builtin.git:
+        repo: https://github.com/neovide/neovide
+        dest: /usr/src/neovide
+        depth: 1
+        version: 0.13.3
+        update: false
+
+    - name: Editor | Install Neovide | Install Neovide with cargo
+      community.general.cargo:
+        name: neovide
+        directory: /usr/src/neovide
+        state: present
+        locked: true
+        path: /usr
+
+- name: Communication | Install Discord
+  community.general.flatpak:
+    name:
+      - dev.vencord.Vesktop
+      #      - us.zoom.Zoom
+    state: present
+
+- name: Tools | Install Scrcpy
+  community.general.flatpak:
+    name:
+      - in.srev.guiscrcpy
+    state: present
+
+# - name: Tools | Install Obsidian
+#   community.general.flatpak:
+#     name:
+#       - md.obsidian.Obsidian
+#     state: present
+
+- name: Multimedia | Install Spotify
+  community.general.flatpak:
+    name:
+      - com.spotify.Client
+    state: present
+
+- name: Check if Universal Android Debloater is installed
+  ansible.builtin.find:
+    file_type: file
+    recurse: true
+    patterns:
+      - universal-android-debloater
+      - UniversalAndroidDebloater.desktop
+    paths:
+      - /usr/bin
+      - /usr/share/applications/
+  register: __desktop_apps_uad_found
+
+- name: Tools | Install Universal Android Debloater
+  when: __desktop_apps_uad_found | length < 2
+  block:
+    - name: Tools | Install Universal Android Debloater | Install android-tools
+      ansible.builtin.dnf:
+        name: android-tools
+        state: present
+
+    - name: Tools | Install Universal Android Debloater | Create temp directory
+      ansible.builtin.tempfile:
+        suffix: __desktop_apps_uad_install
+      register: __desktop_apps_uad_install
+
+    - name: Tools | Install Universal Android Debloater | Fetch UAD release binary
+      ansible.builtin.unarchive:
+        src: https://github.com/0x192/universal-android-debloater/releases/download/0.5.1/uad_gui-linux.tar.gz
+        dest: '{{ __desktop_apps_uad_install.path }}'
+
+    - name: Tools | Install Universal Android Debloater | Install UAD
+      ansible.builtin.command:
+        cmd: install -Dm755 '{{ __desktop_apps_uad_install.path }}' -t '/usr/bin/universal-android-debloater'
+
+    - name: Tools | Install Universal Android Debloater | Create desktop Item
+      ansible.builtin.blockinfile:
+        path: /usr/share/applications/UniversalAndroidDebloater.desktop
+        mode: '0644'
+        block: |
+          [Desktop Entry]
+          Encoding=UTF-8
+          Type=Application
+          Terminal=false
+          Exec=/usr/bin/universal-android-debloater
+          Name=Universal Android Debloater
+
+    - name: Tools | Install Universal Android Debloater | Remove temp directory
+      ansible.builtin.file:
+        path: '{{ __desktop_apps_uad_install.path }}'
+        state: absent

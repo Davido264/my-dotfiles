@@ -1,0 +1,5 @@
+---
+- name: Install Android Studio
+  community.general.flatpak:
+    name: com.google.AndroidStudio
+    state: present

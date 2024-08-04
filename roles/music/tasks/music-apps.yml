@@ -1,0 +1,28 @@
+---
+- name: Install Jack Control
+  ansible.builtin.package:
+    name: qjackctl
+    state: present
+
+- name: Install Furnace
+  ansible.builtin.package:
+    name: furnace
+    state: present
+
+- name: Perform platform tasks
+  ansible.builtin.include_tasks: '{{ lookup("first_found",__music_music_apps_paths) }}'
+  vars:
+    __music_music_apps_paths:
+      files:
+        - 'music-apps_{{ ansible_facts["distribution"] | lower  }}.yml'
+      paths:
+        - '{{ role_path }}/tasks'
+
+- name: Install Cardinal, Odin2, Surge and Zynaddsubfx
+  ansible.builtin.package:
+    name:
+      - cardinal
+      - '{{ __music_odin2_package }}'
+      - surge-xt
+      - zynaddsubfx
+    state: present

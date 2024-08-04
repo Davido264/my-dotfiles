@@ -1,0 +1,20 @@
+---
+- name: Install V$Code (AUR)
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name:
+      - visual-studio-code-bin
+    state: present
+  when: ansible_facts["distribution"] == "Archlinux"
+
+# - name: Install Desktop apps (Devel, AUR)
+#   become: true
+#   become_user: '{{ ansible_user }}'
+#   kewlfft.aur.aur:
+#     name:
+#       - android-studio
+#     state: present
+#   when: ansible_facts["distribution"] == "Archlinux"
+
+# TODO: check if those apps are on the repos, if not, go to flatpak

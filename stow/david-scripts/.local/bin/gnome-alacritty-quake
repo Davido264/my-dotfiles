@@ -1,0 +1,2 @@
+#!/bin/sh
+WAYLAND_DISPLAY= tdrop -mta -w 50% -h 50% -x 25% -y 25% alacritty --class "dropdown" -o "window.opacity=1" -o "window.decorations='None'"

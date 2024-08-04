@@ -1,0 +1,51 @@
+---
+- name: Browser | Install Brave
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name:
+      - brave-bin
+    state: present
+
+- name: Editor | Install Neovide
+  community.general.pacman:
+    name:
+      - neovide
+    state: present
+
+- name: Communication | Install Discord
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name:
+      - vesktop-bin
+      #      - zoom
+    state: present
+
+- name: Tools | Install Scrcpy
+  community.general.pacman:
+    name:
+      - scrcpy
+    state: present
+
+# - name: Tools | Install Obsidian
+#   community.general.pacman:
+#     name:
+#       - obsidian
+#     state: present
+
+- name: Multimedia | Install Spotify
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name:
+      - spotify
+    state: present
+
+- name: Tools | Install Universal Android Debloater
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name:
+      - universal-android-debloater
+    state: present

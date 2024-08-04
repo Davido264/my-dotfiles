@@ -1,0 +1,16 @@
+---
+# TODO: Install flutter w/o dying
+#
+# - name: Install Dart Tooling
+#   community.general.pacman:
+#     name:
+#       - dart
+#     state: present
+
+# - name: Install Dart Tooling (AUR)
+#   become: true
+#   become_user: '{{ ansible_user }}'
+#   kewlfft.aur.aur:
+#     name:
+#       - flutter
+#     state: present

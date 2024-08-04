@@ -1,0 +1,43 @@
+---
+- name: Send failed notifications
+  when:
+    - ansible_execution_failed is defined
+    - ansible_execution_failed
+  block:
+    - name: Send failure notification via telegram
+      tags: always
+      community.general.telegram:
+        token: '{{ __notifications_telegram_token }}'
+        api_args:
+          chat_id: '{{ __notifications_telegram_chat_id }}'
+          parse_mode: markdown
+          text: >-
+            ⚠️  Ansible provision failed on *{{ ansible_hostname }}*\n\n
+            *Task*:  {{ ansible_failed_task.name }}\n
+            *Action*: {{ ansible_failed_task.action }}\n
+            *Error Message*: \n ```json\n{{ ansible_failed_result | to_nice_json }}```
+      changed_when: false
+
+  rescue:
+    - name: Send failure notification via telegram
+      tags: always
+      community.general.telegram:
+        token: '{{ __notifications_telegram_token }}'
+        api_args:
+          chat_id: '{{ __notifications_telegram_chat_id }}'
+          parse_mode: markdown
+          text: >-
+            ⚠️  Ansible provision failed on *{{ ansible_hostname }}*\n\n
+            The specific error couldn't be shown, check the log.
+      changed_when: false
+
+- name: Send Completion alert
+  tags: always
+  when: ansible_execution_failed is undefined
+  community.general.telegram:
+    token: '{{ __notifications_telegram_token }}'
+    api_args:
+      chat_id: '{{ __notifications_telegram_chat_id }}'
+      parse_mode: markdown
+      text: '✔️  Ansible provision finished on *{{ ansible_hostname }}*'
+  changed_when: false

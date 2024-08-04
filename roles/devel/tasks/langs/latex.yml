@@ -1,0 +1,5 @@
+---
+- name: LaTeX | Install Texlive packages
+  ansible.builtin.package:
+    name: '{{ __devel_latex_packages }}'
+    state: present

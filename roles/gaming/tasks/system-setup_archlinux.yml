@@ -1,0 +1,47 @@
+---
+- name: System Setup | Enable multilib (1/2)
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    regexp: '^#[multilib]'
+    line: '[multilib]'
+    state: present
+
+- name: System Setup | Enable multilib (2/2)
+  ansible.builtin.lineinfile:
+    path: /etc/pacman.conf
+    regexp: '^#Include = /etc/pacman.d/mirrorlist'
+    line: 'Include = /etc/pacman.d/mirrorlist'
+    state: present
+
+- name: System Setup | Install 32bit pipewire libs
+  community.general.pacman:
+    name:
+      - pipewire-pulse
+    state: present
+
+- name: System Setup | Install Optional dependencies
+  community.general.pacman:
+    name:
+      - lib32-gnutls # Encryption support
+      - lib32-sdl2 # Joystick and gamepad
+      - samba # NTLM authentication
+    state: present
+
+- name: System Setup | Install vulkan an other graphical dependencies
+  community.general.pacman:
+    name:
+      - vulkan-headers
+      - vulkan-icd-loader
+      - vulkan-validation-layers
+      - vulkan-intel
+      - lib32-vulkan-intel
+      - vulkan-tools
+      - libadwaita
+    state: present
+
+- name: System Setup | Install mangohud monitor and wine
+  community.general.pacman:
+    name:
+      - mangohud
+      - wine
+    state: present

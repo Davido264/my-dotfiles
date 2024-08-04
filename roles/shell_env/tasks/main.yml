@@ -1,0 +1,175 @@
+---
+- block:
+    - name: Perform platform tasks
+      ansible.builtin.include_tasks: '{{ lookup("first_found",__shell_env_extra_paths) }}'
+      vars:
+        __shell_env_extra_paths:
+          files:
+            - '{{ ansible_facts["distribution"] | lower }}.yml'
+          paths:
+            - '{{ role_path }}/tasks'
+          skip: true
+
+    - name: Set platform specific variables
+      ansible.builtin.include_vars: '{{ lookup("first_found", __shell_env_extra_paths)}}'
+      vars:
+        __shell_env_extra_paths:
+          files:
+            - '{{ ansible_facts["distribution"] | lower }}.yml'
+            - 'default.yml'
+          paths:
+            - '{{ role_path }}/vars'
+
+    - name: Install shell
+      ansible.builtin.package:
+        name: '{{ shell_env_default_shell }}'
+        state: present
+      notify: Set default shell
+
+    - name: Apply shell and ssh configs
+      tags: dotfiles, dot
+      become: false
+      become_user: '{{ ansible_user }}'
+      stow:
+        dir: '{{ playbook_dir }}/stow'
+        package: '{{ item }}'
+        state: supress
+      with_items:
+        - shell
+        - ssh
+
+    - name: Install private key
+      become: false
+      become_user: '{{ ansible_user }}'
+      ansible.builtin.copy:
+        src: id_rsa
+        dest: '/home/{{ ansible_user }}/.ssh/id_rsa'
+        mode: '0600'
+
+    # Posible minimal installation:
+    ## phone: neovim, git, lazygit, zoxide, clang, curl, zip, unzip, git, fzf, jq, zellij/tmux
+    #
+    # TODO: Think about this
+    #   Minimal: Optimize storage usage, the bare minimum for an android device or a container
+    #   Normal: Not caring too much about storage, give me all the necesary tooling to work and do some other stuff
+    #   Fancy: Install everything and make it pretty
+
+    # TODO: Where to fit Neovim and Tmux/Zellij? Is it better to go full zellij?
+
+    - name: Install cli utils minimal tier
+      ansible.builtin.package:
+        name:
+          - coreutils
+          - curl
+          - zip
+          - unzip
+          - wget
+          - jq
+          - fzf
+          - git
+        state: present
+
+    - name: Install cli utils normal tier
+      ansible.builtin.package:
+        name:
+          - htop
+          - lsof
+          - rclone
+          - btop
+          - yt-dlp
+          - p7zip
+          - bitwarden-cli
+          - traceroute
+          - zoxide
+          - gum
+          - '{{ __shell_env_bind_utils_package }}'
+          - '{{ __shell_env_imagemagick_package }}'
+          - '{{ __shell_env_pandoc_package }}'
+        state: present
+      when: shell_env_mode != 'minimal'
+
+    - name: Install cli utils fancy tier
+      ansible.builtin.package:
+        name:
+          - eza
+          - fastfetch
+          - cmatrix
+          - onefetch
+        state: present
+      when: shell_env_mode == 'fancy'
+
+    - name: Perform Starship tasks
+      when: shell_env_mode == 'fancy'
+      ansible.builtin.include_tasks: '{{ lookup("first_found",__shell_env_starship_install) }}'
+      vars:
+        __shell_env_starship_install:
+          files:
+            - 'starship_{{ ansible_facts["distribution"] | lower }}.yml'
+            - 'starship_default.yml'
+          paths:
+            - '{{ role_path }}/tasks'
+
+    - name: Apply shell environment minimal tier configs
+      tags: dotfiles, dot
+      become: false
+      become_user: '{{ ansible_user }}'
+      stow:
+        dir: '{{ playbook_dir }}/stow'
+        package: '{{ item }}'
+        state: supress
+      with_items:
+        - git
+
+    # TODO: Neovim can be in a minimal tier, but it configs can reach normal tier
+    # find a way to define it
+    - name: Apply shell environment normal tier configs
+      tags: dotfiles, dot
+      become: false
+      become_user: '{{ ansible_user }}'
+      stow:
+        dir: '{{ playbook_dir }}/stow'
+        package: '{{ item }}'
+        state: supress
+      with_items:
+        - btop
+        - yt-dlp
+        - tmux
+        - neovim
+        - zellij
+
+    - name: Setup LSP and tooling tier for neovim
+      tags: dotfiles, dot
+      become: false
+      become_user: '{{ ansible_user }}'
+      ansible.builtin.blockinfile:
+        path: '/home/{{ ansible_user }}/.config/nvim/lua/david/lsp/servers/current.lua'
+        block: |
+          return "{%- if shell_env_mode == 'fancy' -%}normal{%- else -%}{{ shell_env_mode }}{%- endif -%}"
+        marker: -- {mark} ANSIBLE MANAGED BLOCK --
+        mode: '0644'
+        create: true
+
+    - name: Apply shell environment fancy tier configs
+      tags: dotfiles, dot
+      become: false
+      become_user: '{{ ansible_user }}'
+      stow:
+        dir: '{{ playbook_dir }}/stow'
+        package: '{{ item }}'
+        state: supress
+      with_items:
+        - fastfetch
+        - starship
+
+    - name: Install my scripts
+      tags: dotfiles, dots
+      become: false
+      become_user: '{{ ansible_user }}'
+      stow:
+        dir: '{{ playbook_dir }}/stow'
+        package: david-scripts
+        state: supress
+      when: shell_env_mode != 'minimal'
+  rescue:
+    - ansible.builtin.set_fact:
+        ansible_execution_failed: true

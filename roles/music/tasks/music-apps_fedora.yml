@@ -1,0 +1,69 @@
+---
+- name: Enable Audinux COPR
+  community.general.copr:
+    name: ycollet/audinux
+    state: enabled
+
+- name: Install Reaper
+  community.general.flatpak:
+    name: fm.reaper.Reaper
+    state: present
+
+- name: Install Giada
+  ansible.builtin.dnf:
+    name: giada
+    state: present
+
+- name: Install CHOW and Vitalium
+  ansible.builtin.dnf:
+    name:
+      - AnalogTapeModel
+      - vitalium
+    state: present
+
+- name: Check if TAL NoiseMaker installed
+  ansible.builtin.find:
+    patterns:
+      - 'TAL-NoiseMaker.*'
+    paths:
+      - /usr/lib/vst3
+      - /usr/lib/vst
+      - /usr/lib/clap
+    file_type: any
+    recurse: true
+  register: __music_tal_installed
+
+- name: Install TAL Noise Maker
+  when: __music_tal_installed.files | length < 3
+  block:
+    - name: Install TAL Noise Maker | Create temp directory
+      ansible.builtin.tempfile:
+        suffix: tal_install
+        state: directory
+      register: __music_tal_tmpdir
+
+    - name: Install TAL Noise Maker | Download Archive
+      ansible.builtin.unarchive:
+        src: https://tal-software.com/downloads/plugins/TAL-NoiseMaker_64_linux.zip
+        dest: '{{ __music_tal_tmpdir.path }}'
+        creates: '{{ __music_tal_tmpdir.path }}/TAL-NoiseMaker'
+
+    - name: Install TAL Noise Maker | Install files
+      ansible.builtin.command:
+        cmd: 'install -Dm755 "{{ __music_tal_tmpdir.path }}/TAL-NoiseMaker/{{ item.src }}" {{ item.dest }}'
+        creates: '{{ item.creates }}'
+      with_items:
+        - src: 'libTAL-NoiseMaker.so'
+          dest: '/usr/lib/vst/TAL\ Software/libTAL-NoiseMaker.so'
+          creates: '/usr/lib/vst/TAL Software/libTAL-NoiseMaker.so'
+        - src: 'TAL-NoiseMaker.vst3/Contents/x86_64-linux/TAL-NoiseMaker.so'
+          dest: '/usr/lib/vst3/TAL\ Software/TAL-NoiseMaker.vst3/Contents/x86_64-linux/TAL-NoiseMaker.so'
+          creates: '/usr/lib/vst3/TAL Software/TAL-NoiseMaker.vst3/Contents/x86_64-linux/TAL-NoiseMaker.so'
+        - src: 'TAL-NoiseMaker.clap'
+          dest: '/usr/lib/clap/TAL-NoiseMaker.clap'
+          creates: '/usr/lib/clap/TAL-NoiseMaker.clap'
+
+    - name: Install TAL Noise Maker | Remove tmp files
+      ansible.builtin.file:
+        path: '{{ __music_tal_tmpdir.path }}'
+        state: absent

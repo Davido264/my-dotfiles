@@ -1,0 +1,20 @@
+---
+- name: Clojure | Include Java tasks
+  ansible.builtin.include_tasks: '{{ role_path }}/tasks/langs/java.yml'
+
+- name: Clojure | Install Clojure
+  ansible.builtin.package:
+    name: clojure
+    state: present
+
+- name: Clojure | Add Leiningen ASDF Plugin
+  become_user: '{{ ansible_user }}'
+  become: false
+  changed_when: true
+  ansible.builtin.shell:
+    executable: /bin/sh
+    cmd: >
+      export ASDF_DIR="$HOME/.local/share/asdf";
+      . "$HOME/.local/share/asdf/asdf.sh";
+      asdf plugin add lein https://codeberg.org/malice/asdf-lein.git
+    creates: /home/{{ ansible_user }}/.local/share/asdf/plugins/lein

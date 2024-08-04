@@ -1,0 +1,67 @@
+---
+- name: Enable libvirt service
+  ansible.builtin.service:
+    name: libvirtd
+    enabled: true
+    state: started
+  register: __virt_libvirtd_status
+  until: __virt_libvirtd_status is success
+  retries: 15
+  delay: 2
+
+- name: Check if nested virtualization is available
+  block:
+    - name: Set kvm module fact
+      ansible.builtin.set_fact:
+        __virt_kvm_mod_name: >
+          kvm_{{ ansible_facts["processor"]
+          | select("regex", "GenuineIntel|AuthenticAMD")
+          | first
+          | regex_replace('Genuine|Authentic', '')
+          | lower }}
+
+    - name: Check if nested virtualization is available | Check module parameters
+      ansible.builtin.command:
+        cmd: cat /sys/module/{{ __virt_kvm_mod_name }}/parameters/nested
+      register: __virt_nested_virt
+      changed_when: false
+      ignore_errors: true
+
+
+- name: Enable nested virtualization
+  ansible.builtin.lineinfile:
+    path: /etc/modprobe.d/nested.conf
+    line: options kvm_{{ virt_cpu }} nested=1
+    mode: '0644'
+    create: true
+    state: present
+  when: __virt_nested_virt.stdout in ["1","Y"]
+
+- name: Add user to /etc/libvirt/libvirtd.conf
+  ansible.builtin.lineinfile:
+    path: /etc/libvirt/libvirtd.conf
+    regexp: '^#unix_sock_group = "libvirt"'
+    line: 'unix_sock_group = "libvirt"'
+
+- name: Add kvm group to /etc/libvirt/qemu.conf
+  ansible.builtin.lineinfile:
+    path: /etc/libvirt/qemu.conf
+    regexp: '^#group = "libvirt-qemu"'
+    line: 'group = "kvm"'
+
+- name: Setting libvirt and kvm groups
+  ansible.builtin.group:
+    name: '{{ item }}'
+    state: present
+  loop:
+    - libvirtd
+    - kvm
+  notify: Add users to libvirt and kvm groups
+
+- name: Add users to libvirt and kvm groups
+  ansible.builtin.user:
+    name: '{{ ansible_user }}'
+    append: true
+    groups:
+      - libvirtd
+      - kvm

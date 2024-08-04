@@ -1,0 +1,9 @@
+# vim: ft=yaml.ansible
+- name: Install neovim and depencencies
+  ansible.builtin.package:
+    name:
+      - ripgrep
+      - tree-sitter-cli
+      - neovim
+    state: present
+  notify: Set neovim as $EDITOR for all users

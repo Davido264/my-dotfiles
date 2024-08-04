@@ -1,0 +1,44 @@
+---
+- name: Python | Install Python
+  ansible.builtin.package:
+    name: python
+    state: present
+
+- name: Python | Install pip
+  ansible.builtin.package:
+    name:
+      - '{{ __devel_python_prefix }}-setuptools'
+      - '{{ __devel_python_prefix }}-pip'
+    state: present
+
+- name: Python | Install Data Science Libs Globally
+  ansible.builtin.package:
+    name:
+      - '{{ __devel_python_prefix }}-numpy'
+      - '{{ __devel_python_prefix }}-pandas'
+      - '{{ __devel_python_prefix }}-matplotlib'
+      - '{{ __devel_python_prefix }}-ipykernel'
+      - '{{ __devel_python_prefix }}-ipympl'
+      - '{{ __devel_python_prefix }}-ipywidgets'
+    state: present
+
+- name: Python | Add Python ASDF Plugin
+  become_user: '{{ ansible_user }}'
+  become: false
+  ansible.builtin.shell:
+    executable: /bin/sh
+    cmd: >
+      export ASDF_DIR="$HOME/.local/share/asdf";
+      . "$HOME/.local/share/asdf/asdf.sh";
+      asdf plugin add python &&
+      asdf global python system
+    creates: /home/{{ ansible_user }}/.local/share/asdf/plugins/python
+
+- name: Python | Apply Pylint configs
+  tags: dotfiles, dot
+  become: false
+  become_user: '{{ ansible_user }}'
+  stow:
+    dir: '{{ playbook_dir }}/stow'
+    package: pylint
+    state: supress

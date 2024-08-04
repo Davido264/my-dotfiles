@@ -1,0 +1,80 @@
+---
+- block:
+    - name: Set platform specific variables
+      ansible.builtin.include_vars: '{{ lookup("first_found",__desktop_env_var_paths) }}'
+      vars:
+        __desktop_env_var_paths:
+          files:
+            - '{{ ansible_facts["distribution"] | lower }}.yml'
+          paths:
+            - '{{ role_path }}/vars'
+
+    - name: Install base utils
+      ansible.builtin.package:
+        name:
+          - '{{ __desktop_env_base_devel_package }}'
+          - dbus
+          - rtkit
+          - polkit
+          - xdg-utils
+          - xdg-user-dirs
+          - '{{ __desktop_env_python_pyquery_package }}'
+          - libnotify
+        state: present
+
+    - name: Install integrated graphic drivers
+      ansible.builtin.package:
+        name: xf86-video-intel # for intel
+      when: desktop_env_graphics_provider == "integrated" and "GenuineIntel" in ansible_facts["processor"]
+
+    - name: Install pipewire pkgs
+      ansible.builtin.package:
+        name:
+          - pipewire
+          - wireplumber
+          - pipewire-alsa
+          - pipewire-pulse
+        state: present
+
+    # TODO: Create a separate task for Nerd fonts to do it manually by default and using pacman in arch
+    - name: Install fonts
+      community.general.pacman:
+        name:
+          - adobe-source-code-pro-fonts # on fedora
+          - noto-fonts-emoji # google-noto-color-emoji-fonts and google-noto-emoji-fonts on fedora
+          - cantarell-fonts # abattis-cantarell-fonts on fedora
+          - ttf-droid # google-droid-fonts-all on fedora
+          - ttf-fira-code # fira-code-fonts on fedora
+          - ttf-jetbrains-mono # jetbrains-mono-fonts-all on fedora
+          - ttf-jetbrains-mono-nerd # not on fedora
+          - ttf-mononoki-nerd # not on fedora
+          - otf-comicshanns-nerd # not on fedora
+        state: present
+      when: ansible_facts["distribution"] == "Archlinux"
+
+    # TODO: This requires an iso from MS Windows or a CD of Office 2007
+    # - name: Install MS Fonts (AUR)
+    #   become: true
+    #   become_user: '{{ ansible_user }}'
+    #   kewlfft.aur.aur:
+    #     name:
+    #       - ttf-ms-win11
+    #       - ttf-office-2007-fonts
+    #     state: present
+
+    - name: Install dconf requirements
+      ansible.builtin.package:
+        name: '{{ __desktop_env_psutil_package }}'
+        state: present
+
+    - name: Perform GTK tasks
+      ansible.builtin.include_tasks: '{{ role_path }}/tasks/gtk.yml'
+
+    - name: Perform tasks for '{{ desktop_env_provider }}'
+      ansible.builtin.include_tasks: '{{ role_path }}/tasks/{{ desktop_env_provider }}.yml'
+
+    - name: Perform XDG Directories tasks
+      ansible.builtin.include_tasks: '{{ role_path }}/tasks/xdg_dirs.yml'
+  rescue:
+    - ansible.builtin.set_fact:
+        ansible_execution_failed: true

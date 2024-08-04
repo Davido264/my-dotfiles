@@ -1,0 +1,5 @@
+---
+- name: Go | Install Go
+  ansible.builtin.package:
+    name: '{{ __devel_go_package }}'
+    state: present

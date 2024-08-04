@@ -1,0 +1,18 @@
+themes {
+    david {
+        // Define color themes for Zellij
+        // For more examples, see: https://github.com/zellij-org/zellij/tree/main/example/themes
+        // Once these themes are defined, one of them should to be selected in the "theme" section of this file
+         fg "#f0dedd"
+         bg "#1a1111"
+         red "#ffb3ad"
+         green "#dcc66e"
+         yellow "#f9bb72"
+         blue "#93d5aa"
+         magenta "#ffb2bb"
+         orange "#e4c18d"
+         cyan "#8ad6b7"
+         black "#1a1111"
+         white "#f0dedd"
+    }
+}

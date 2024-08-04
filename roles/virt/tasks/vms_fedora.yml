@@ -1,0 +1,9 @@
+---
+- name: Install virtualization group
+  ansible.builtin.dnf:
+    name:
+      - '@Virtualization'
+      - libguestfs-tools
+      - virt-top
+      - libosinfo
+    state: present

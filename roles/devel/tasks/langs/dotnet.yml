@@ -1,0 +1,26 @@
+---
+- name: .NET | Install .NET packages
+  ansible.builtin.package:
+    name: '{{ __devel_dotnet_package }}'
+    state: present
+
+- name: .NET | Add dotnet ASDF plugin
+  become_user: '{{ ansible_user }}'
+  become: false
+  ansible.builtin.shell:
+    executable: /bin/sh
+    cmd: >
+      export ASDF_DIR="$HOME/.local/share/asdf";
+      . "$HOME/.local/share/asdf/asdf.sh" ;
+      asdf plugin add dotnet &&
+      asdf global dotnet system
+    creates: /home/{{ ansible_user }}/.local/share/asdf/plugins/dotnet
+
+- name: .NET | Apply Omnisharp configs
+  tags: dotfiles, dot
+  become: false
+  become_user: '{{ ansible_user }}'
+  stow:
+    dir: '{{ playbook_dir }}/stow'
+    package: omnisharp
+    state: supress

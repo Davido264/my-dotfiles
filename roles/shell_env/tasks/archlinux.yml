@@ -1,0 +1,9 @@
+---
+- name: Apply paru configs
+  tags: dotfiles, dot
+  become: false
+  become_user: '{{ ansible_user }}'
+  stow:
+    dir: '{{ playbook_dir }}/stow'
+    package: paru
+    state: supress

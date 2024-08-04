@@ -1,0 +1,15 @@
+---
+- name: Ensure firewalld is running
+  ansible.builtin.service:
+    name: firewalld
+    state: running
+    enabled: true
+  register: __system_firewalld_status
+  until: __system_firewalld_status is success
+  retries: 15
+  delay: 2
+
+- name: Remove firewall-applet from autostart
+  ansible.builtin.file:
+    path: /etc/xdg/autostart/firewall-applet.desktop
+    state: absent

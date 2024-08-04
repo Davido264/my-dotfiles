@@ -1,0 +1,5 @@
+---
+shell_env_default_shell: zsh
+# minimal | normal | fancy
+shell_env_mode: minimal
+shell_env_nvim_global: true

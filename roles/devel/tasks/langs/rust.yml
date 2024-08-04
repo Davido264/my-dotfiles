@@ -1,0 +1,5 @@
+---
+- name: Rust | Install Rust packages
+  ansible.builtin.package:
+    name: '{{ __devel_rust_packages }}'
+    state: present

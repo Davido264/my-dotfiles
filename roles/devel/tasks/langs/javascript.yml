@@ -1,0 +1,29 @@
+---
+- name: Javascript | Install Node
+  ansible.builtin.package:
+    name:
+      - '{{ __devel_nodejs_lts_package }}'
+      - '{{ __devel_npm_package }}'
+      - pnpm
+    state: present
+
+- name: Javascript | Add Javascript ASDF Plugin
+  become_user: '{{ ansible_user }}'
+  become: false
+  ansible.builtin.shell:
+    executable: /bin/sh
+    cmd: >
+      export ASDF_DIR="$HOME/.local/share/asdf";
+      . "$HOME/.local/share/asdf/asdf.sh";
+      asdf plugin add nodejs &&
+      asdf global nodejs system
+    creates: /home/{{ ansible_user }}/.local/share/asdf/plugins/nodejs
+
+- name: Javascript | Apply NPM configs
+  tags: dotfiles, dot
+  become: false
+  become_user: '{{ ansible_user }}'
+  stow:
+    dir: '{{ playbook_dir }}/stow'
+    package: node
+    state: supress

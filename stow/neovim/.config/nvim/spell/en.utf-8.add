@@ -665,3 +665,5 @@ SELinux
 yaml
 kubernetes
 Traccar
+WebDav
+CalDav

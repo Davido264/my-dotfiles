@@ -1,0 +1,5 @@
+---
+- name: Install lazygit copr
+  community.general.copr:
+    name: atim/lazygit
+    state: present

@@ -1,5 +1,4 @@
 # TODO
-## PRIORITY: 
 - [ ] Learn Reaper (3h video)
 
 - [ ] Integrate the install script with my (future) webdav server
@@ -11,6 +10,11 @@
     - Wallpapers?
         - [ ] Move the cloning of `~/Pictures/wallpapers` stuff to ansible
 
+- [ ] Questions:
+    - Shell environment and development tools are overlapping in some zones, will it be better if I merge them into one?
+        - Also, they both can have the 'minimal' and 'normal' tier, but only shell environment have the 'fancy' tier
+    - How do I detect on ansible that I'm running in Termux?
+    - Is it best to go full Zellij instead of Tmux?
 
 - [ ] Restore tabs (maybe use this to test browser usage)
     - [PiP on Top](https://github.com/Rafostar/gnome-shell-extension-pip-on-top)

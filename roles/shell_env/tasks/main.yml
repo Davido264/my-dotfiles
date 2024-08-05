@@ -49,6 +49,8 @@
     # Posible minimal installation:
     ## phone: neovim, git, lazygit, zoxide, clang, curl, zip, unzip, git, fzf, jq, zellij/tmux
     #
+    # All this are mixed between shell only and development D:
+    #
     # TODO: Think about this
     #   Minimal: Optimize storage usage, the bare minimum for an android device or a container
     #   Normal: Not caring too much about storage, give me all the necesary tooling to work and do some other stuff

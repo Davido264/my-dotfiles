@@ -9,6 +9,16 @@
           paths:
             - '{{ role_path }}/vars'
 
+    - name: Perform platform specific tasks
+      ansible.builtin.include_tasks: '{{ lookup("first_found",__devel_tasks_paths) }}'
+      vars:
+        __devel_tasks_paths:
+          files:
+            - '{{ ansible_facts["distribution"] | lower  }}.yml'
+          paths:
+            - '{{ role_path }}/vars'
+          skip: true
+
     - name: Install dev utils
       ansible.builtin.package:
         name:
@@ -19,6 +29,7 @@
           - android-tools
           - glab
           - gitleaks
+          - lazygit
         state: present
 
     # TODO: Write this for Mason

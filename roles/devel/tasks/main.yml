@@ -13,10 +13,12 @@
       ansible.builtin.package:
         name:
           - base-devel
+          - git
           - direnv
           - '{{ __devel_github_cli_package }}'
           - android-tools
           - glab
+          - gitleaks
         state: present
 
     # TODO: Write this for Mason

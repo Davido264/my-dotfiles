@@ -20,5 +20,5 @@ x = 5
 y = 5
 
 [shell]
-program = "zellij"
-args = ["-l","welcome"]
+program = "tmux"
+# args = ["-l","welcome"]

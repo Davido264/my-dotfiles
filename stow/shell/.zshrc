@@ -71,8 +71,6 @@ if which zoxide &> /dev/null; then
     alias -- 'z'='__zoxide_zi'
 fi
 
-alias -- 'ws'='cd $(/home/david/.local/bin/ws)'
-
 if which eza &> /dev/null; then
     alias -- 'vimdiff'='nvim -d'
     alias -- 'vim'='nvim'

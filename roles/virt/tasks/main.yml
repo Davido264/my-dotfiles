@@ -27,6 +27,12 @@
               - podman-compose
             state: present
 
+        - name: Containers | Allow podman to search in docker.io
+          ansible.builtin.lineinfile:
+            path: /etc/containers/registries.conf
+            line: unqualified-search-registries = ["docker.io"]
+            regexp: '^# unqualified-search-registries .*$'
+
         - name: Containers | Install distrobox
           ansible.builtin.package:
             name: distrobox

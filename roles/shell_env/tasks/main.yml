@@ -47,7 +47,7 @@
         mode: '0600'
 
     # Posible minimal installation:
-    ## phone: neovim, git, lazygit, zoxide, clang, curl, zip, unzip, git, fzf, jq, zellij/tmux
+    ## phone: neovim, git, lazygit, zoxide, clang, curl, zip, unzip, git, fzf, jq, tmux
     #
     # All this are mixed between shell only and development D:
     #
@@ -55,8 +55,6 @@
     #   Minimal: Optimize storage usage, the bare minimum for an android device or a container
     #   Normal: Not caring too much about storage, give me all the necesary tooling to work and do some other stuff
     #   Fancy: Install everything and make it pretty
-
-    # TODO: Where to fit Neovim and Tmux/Zellij? Is it better to go full zellij?
 
     - name: Install cli utils minimal tier
       ansible.builtin.package:
@@ -69,6 +67,20 @@
           - jq
           - fzf
           - git
+        state: present
+
+    - name: Install neovim and depencencies
+      ansible.builtin.package:
+        name:
+          - ripgrep
+          - tree-sitter-cli
+          - neovim
+        state: present
+      notify: Set neovim as $EDITOR for all users
+
+    - name: Install tmux
+      ansible.builtin.package:
+        name: tmux
         state: present
 
     - name: Install cli utils normal tier
@@ -122,8 +134,6 @@
       with_items:
         - git
 
-    # TODO: Neovim can be in a minimal tier, but it configs can reach normal tier
-    # find a way to define it
     - name: Apply shell environment normal tier configs
       tags: dotfiles, dot
       become: false
@@ -137,7 +147,6 @@
         - yt-dlp
         - tmux
         - neovim
-        - zellij
 
     - name: Setup LSP and tooling tier for neovim
       tags: dotfiles, dot

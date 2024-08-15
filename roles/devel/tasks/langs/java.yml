@@ -15,3 +15,12 @@
       asdf plugin add java &&
       asdf global java system
     creates: /home/{{ ansible_user }}/.local/share/asdf/plugins/java
+
+- name: Java | Apply Gradle configs
+  tags: dotfiles, dot
+  become: false
+  become_user: '{{ ansible_user }}'
+  stow:
+    dir: '{{ playbook_dir }}/stow'
+    package: gradle
+    state: supress

@@ -20,6 +20,7 @@ return {
       "go",
       "gotmpl",
       "gowork",
+      "gomod",
 
       -- Java
       "java",
@@ -95,7 +96,6 @@ return {
 
       -- Scheme
       "scheme",
-
 
       -- Other
       "bass",

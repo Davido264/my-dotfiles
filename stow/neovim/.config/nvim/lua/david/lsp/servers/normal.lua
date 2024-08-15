@@ -33,6 +33,9 @@ M.servers = vim.tbl_deep_extend("force", minimal.servers, {
   "json-lsp",
   "yaml-language-server",
 
+  -- Sql
+  "sqls",
+
   -- Rust
   "rust-analyzer",
 
@@ -72,6 +75,7 @@ M.tools = vim.tbl_deep_extend("force", minimal.tools, {
 
   -- Go
   "golangci-lint",
+  "goimports",
   "delve",
 
   -- C#
@@ -87,6 +91,9 @@ M.tools = vim.tbl_deep_extend("force", minimal.tools, {
   "prettier",
   "node-debug2-adapter",
   "firefox-debug-adapter",
+
+  -- Sql
+  "sql-formatter",
 })
 
 return M

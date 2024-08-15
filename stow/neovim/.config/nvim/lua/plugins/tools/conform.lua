@@ -33,6 +33,8 @@ return {
       javascriptreact = { { "prettier", "prettierd" } },
       typescript = { { "prettier", "prettierd" } },
       typescriptreact = { { "prettier", "prettierd" } },
+      go = { { "goimports" } },
+      sql = { { "sql_formatter" } }
     },
   },
 }

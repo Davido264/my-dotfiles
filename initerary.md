@@ -1,4 +1,6 @@
 # TODO
+- [ ] make matugen/config.toml a template to dynamically add templates and avoiding create unnecesary directories
+
 - [ ] Learn Reaper (3h video)
 
 - [ ] Integrate the install script with my (future) webdav server
@@ -14,7 +16,6 @@
     - Shell environment and development tools are overlapping in some zones, will it be better if I merge them into one?
         - Also, they both can have the 'minimal' and 'normal' tier, but only shell environment have the 'fancy' tier
     - How do I detect on ansible that I'm running in Termux?
-    - Is it best to go full Zellij instead of Tmux?
 
 - [ ] Restore tabs (maybe use this to test browser usage)
     - [PiP on Top](https://github.com/Rafostar/gnome-shell-extension-pip-on-top)
@@ -44,7 +45,6 @@
 
 
 # Review
-- [ ] Start `david-outliner` project
 - [ ] Create README
     - Include the following command on the TODO after install:
         ```sh
@@ -108,9 +108,6 @@ idea de proyecto: waifu waiting
     cuando el comando termine, se mostrará el stdout del comando, o el stderr si falla
     puedo usar go channels
 
-create a repository on github, make it private, set (git remote origin) and use <source> as source
-    gh repo create <name> --private --source <source> --remote origin
-
 # Restore web Pages:
 
 https://github.com/overtone/overtone
@@ -136,15 +133,29 @@ https://www.odoo.com/documentation/saas-13/howtos/backend.html#id3
 https://www.gnu.org/software/coreutils/manual/coreutils.pdf
 
 
-
-- [ ]
-    - configs/.config/nvim/lua/plugins/tools/mason.lua
-    - TODO: When I have the time, go for the option 4, https://github.com/nvim-treesitter/nvim-treesitter/issues/2900 had the same issue
-        - Option 4, fork, implement and contribute
-
-- [ ]
-    - roles/desktop/desktop_environment/base/tasks/main.yml
+- [ ] ./roles/gaming/tasks/main.yml
+    - TODO: Gaming on fedora
+- [ ] ./roles/cli/tmux/tasks/main.yml
+    - TODO: Install tmuxinator on fedora
+- [ ] ./roles/devel/tasks/langs/flutter.yml
+    - TODO: Install flutter w/o dying
+- [ ] ./roles/devel/tasks/main.yml
+    - TODO: Write this for Mason
+- [ ] ./roles/devel/tasks/main.yml
+    - TODO: Don't know, maybe first to mary kondo this
+- [ ] ./roles/system/tasks/main.yml
+    - TODO: Detect android/termux with ansible_facts
+- [ ] ./roles/shell_env/tasks/main.yml
+    - TODO: Think about this
+- [ ] ./roles/desktop_env/tasks/gnome.yml
+    - TODO: Install caffeine and fullscreen-to-new-workspace extensions on fedora
+- [ ] ./roles/desktop_env/tasks/main.yml
+    - TODO: Create a separate task for Nerd fonts to do it manually by default and using pacman in arch
+- [ ] ./roles/desktop_env/tasks/main.yml
     - TODO: This requires an iso from MS Windows or a CD of Office 2007
+- [ ] ./stow/neovim/.config/nvim/lua/plugins/tools/mason.lua
+    - TODO: When I have the time, go for the option 4, https://github.com/nvim-treesitter/nvim-treesitter/issues/2900 had
+
 
 - [ ] `L8TR`: fix `pacman`'s _Operation to slow_
     - [ ] what if I want to run the script and do other things? Can the script be resilient with this errors?
@@ -158,5 +169,4 @@ https://www.gnu.org/software/coreutils/manual/coreutils.pdf
 
 En endeavour os, mi `ansible_facts["distribution"]` da "Archlinux"
     distribuciones basadas en arch indican "Archlinux"
-
 

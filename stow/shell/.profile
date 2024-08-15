@@ -1,6 +1,3 @@
-export PATH="$HOME/.local/bin:$PATH"
-export FZF_DEFAULT_OPTS="--delimiter=\t --exit-0 --select-1 --bind=ctrl-z:ignore,btab:up,tab:down --tabstop=1 --height=50% --layout=reverse"
-
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
@@ -44,3 +41,5 @@ export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/config"
 export NPM_CONFIG_CACHE="${XDG_CACHE_HOME}/npm"
 export NPM_CONFIG_TMP="${XDG_RUNTIME_DIR}/npm"
 
+export FZF_DEFAULT_OPTS="--delimiter=\t --exit-0 --select-1 --bind=ctrl-z:ignore,btab:up,tab:down --tabstop=1 --height=50% --layout=reverse"
+export PATH="$HOME/.local/bin:$PATH:$GOBIN"

@@ -38,7 +38,7 @@ function M.setup()
           "-Declipse.product=org.eclipse.jdt.ls.core.product",
           "-Dlog.protocol=true",
           "-Dlog.level=ALL",
-          "-javaagent:" .. lombok_path,
+          -- "-javaagent:" .. lombok_path,
           "-Xms1g",
           "--add-modules=ALL-SYSTEM",
           "--add-opens",

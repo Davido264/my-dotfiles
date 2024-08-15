@@ -3,3 +3,8 @@
   ansible.builtin.package:
     name: '{{ __devel_go_package }}'
     state: present
+
+- name: Go | Install sqlc
+  ansible.builtin.command:
+    cmd: go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+    creates: '{{ lookup("env","GOBIN",default="/home/{{ ansible_user }}/go/bin") }}/sqlc'

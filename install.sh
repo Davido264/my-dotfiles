@@ -1,6 +1,5 @@
 #!/bin/sh
 ### START: Environment variables ###
-export PATH="$HOME/.local/bin:$PATH"
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
@@ -23,11 +22,11 @@ export PYTHON_HISTORY="${XDG_STATE_HOME}/python/history"
 export ANDROID_USER_HOME="${XDG_DATA_HOME}/android"
 export GTK2_RC_FILES="${XDG_CONFIG_HOME}/gtk-2.0/gtkrc"
 export XCURSOR_PATH="/usr/share/icons:${XDG_DATA_HOME}/icons"
+export PATH="$HOME/.local/bin:$PATH:$GOBIN"
 ### END: Environment variables ###
 
 id_like=$(grep -e "^ID_LIKE=" /etc/os-release | sed 's/ID_LIKE="\(.*\)"/\1/g')
 id=$(grep -e "^ID=" /etc/os-release | sed 's/ID="\(.*\)"/\1/g')
-is_android=$(test -x "/data/data/com.termux/files/usr/bin/bash")
 
 echo "Gitlab personal access token: "
 read -r TOKEN
@@ -38,7 +37,7 @@ if [ "$id" = "Arch" ] || [ "$id" = "arch" ] || [ "$id_like" = "Arch" ] || [ "$id
 elif [ "$id" = "Fedora" ] || [ "$id" = "fedora" ] || [ "$id_like" = "Fedora" ] || [ "$id_like" = "fedora" ]; then
 	dnf list installed ansible 2>/dev/null 1>&2 || dnf install -y ansible
 	dnf list installed git 2>/dev/null 1>&2 || dnf install -y git
-elif $is_android; then
+elif [ -x "/data/data/com.termux/files/usr/bin/bash" ]; then
     # from: https://github.com/nicenemo/termux-setup/blob/master/termux-install-ansible.sh
     # by: nicenemo
     # with MIT license

@@ -12,7 +12,7 @@ ls.add_snippets("go", {
     fmt(
       [[
 if err != nil {{
-  {}
+    {}
 }}
   ]],
       { i(0) }

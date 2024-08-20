@@ -50,9 +50,9 @@ output_path = '~/.config/tmux/colors.conf'
 # input_path = '~/.config/matugen/templates/foot.ini'
 # output_path = '~/.config/foot/colors.ini'
 
-[templates.zellij]
-input_path = '~/.config/matugen/templates/zellij.kdl'
-output_path = '~/.config/zellij/themes/david.kdl'
+# [templates.zellij]
+# input_path = '~/.config/matugen/templates/zellij.kdl'
+# output_path = '~/.config/zellij/themes/david.kdl'
 
 [config]
 reload_apps = true

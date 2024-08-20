@@ -1,31 +1,31 @@
 [colors.bright]
-black = "0x39383f"
-blue = "0x81d5cc"
-cyan = "0x80d4d7"
-green = "0xb7d085"
-magenta = "0xfbb1d9"
-red = "0xffb2b9"
-white = "0xc8c5d0"
+black = "0x423734"
+blue = "0x93d5aa"
+cyan = "0x8ad6b7"
+green = "0xdcc66e"
+magenta = "0xffb3b5"
+red = "0xffb4a6"
+white = "0xd8c2bd"
 yellow = "0xf9bb72"
 
 [colors.normal]
-black = "0x131318"
-blue = "0x81d5cc"
-cyan = "0x80d4d7"
-green = "0xb7d085"
-magenta = "0xfbb1d9"
-red = "0xffb2b9"
-white = "0xe5e1e9"
+black = "0x1a1110"
+blue = "0x93d5aa"
+cyan = "0x8ad6b7"
+green = "0xdcc66e"
+magenta = "0xffb3b5"
+red = "0xffb4a6"
+white = "0xf1dfdb"
 yellow = "0xf9bb72"
 
 [colors.primary]
-foreground = "0xe5e1e9"
-background = "0x131318"
+foreground = "0xf1dfdb"
+background = "0x1a1110"
 
 [colors.cursor]
-cursor = "0xe5e1e9"
-text = "0xc8c5d0"
+cursor = "0xf1dfdb"
+text = "0xd8c2bd"
 
 [colors.selection]
-text = "0x2b2a60"
-background = "0xc3c0ff"
+text = "0x561e14"
+background = "0xffb4a5"

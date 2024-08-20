@@ -18,6 +18,12 @@
     "sha": "284aab2b23d91318f169ff464bce4d53404a15a0618ceb34562838c59af4adea"
   },
   {
+    "name": "centos-stream9",
+    "url": "https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-x86_64-9-20240715.0.x86_64.qcow2",
+    "path": "/var/lib/libvirt/images/CentOS-Stream-GenericCloud-x86_64-9-20240715.0.x86_64.qcow2",
+    "sha": "af24c274f24b34ce29bd302fa39e07c3379157e4253ed0644381f0c963f9fb28"
+  },
+  {
     "name": "ubuntu24.04",
     "url": "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img",
     "path": "/var/lib/libvirt/images/noble-server-cloudimg-amd64.img",

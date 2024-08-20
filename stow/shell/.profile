@@ -42,4 +42,7 @@ export NPM_CONFIG_CACHE="${XDG_CACHE_HOME}/npm"
 export NPM_CONFIG_TMP="${XDG_RUNTIME_DIR}/npm"
 
 export FZF_DEFAULT_OPTS="--delimiter=\t --exit-0 --select-1 --bind=ctrl-z:ignore,btab:up,tab:down --tabstop=1 --height=50% --layout=reverse"
-export PATH="$HOME/.local/bin:$PATH:$GOBIN"
+export TMUX_PLUGIN_MANAGER_PATH="$XDG_DATA_HOME/tmux/plugins"
+export TMUXIFIER="$TMUX_PLUGIN_MANAGER_PATH/tmuxifier"
+export TMUXIFIER_LAYOUT_PATH="$XDG_DATA_HOME/tmuxifier"
+export PATH="$HOME/.local/bin:$PATH:$GOBIN:$TMUXIFIER/bin"

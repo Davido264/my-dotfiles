@@ -32,7 +32,6 @@ if [ ! -d $(dirname $ZSH_COMPDUMP) ]; then
 fi
 compinit -d $ZSH_COMPDUMP
 
-
 HISTSIZE="10000"
 HISTFILE="${XDG_DATA_HOME}/zsh/zsh_history"
 SAVEHIST="10000"
@@ -77,7 +76,9 @@ if which eza &> /dev/null; then
     alias -- 'vi'='nvim'
 fi
 
-smolfetch
+if which tmuxifier &> /dev/null; then
+    eval "$(tmuxifier init -)"
+fi
 
 eval "$(direnv hook zsh)"
 
@@ -92,3 +93,5 @@ esac
 if [ -f ~/.local/share/asdf/asdf.sh ]; then
     source ~/.local/share/asdf/asdf.sh
 fi
+
+smolfetch

@@ -1,0 +1,2 @@
+#!/bin/sh
+podman run --rm -v $PWD:/tmp/scan bearer/bearer:latest-amd64 scan /tmp/scan

@@ -1,0 +1,6 @@
+---
+- name: Install Zed
+  community.general.pacman:
+    name:
+      - zed
+    state: present

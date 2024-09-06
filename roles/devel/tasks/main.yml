@@ -59,14 +59,14 @@
         state: supress
 
     - name: Perform V$code tasks
-      ansible.builtin.include_tasks: '{{ lookup("first_found",__devel_vscode_paths) }}'
+      ansible.builtin.include_tasks: '{{ lookup("first_found",__devel_zed_paths) }}'
       vars:
-        __devel_vscode_paths:
+        __devel_zed_paths:
           files:
-            - 'vscode_{{ ansible_facts["distribution"] | lower }}.yml'
+            - 'zed_{{ ansible_facts["distribution"] | lower }}.yml'
           paths:
             - '{{ role_path }}/tasks/gui'
-      when: devel_vscode
+      when: devel_zed
 
     - name: Perform Android Studio tasks
       ansible.builtin.include_tasks: '{{ lookup("first_found",__devel_android_studio_paths) }}'

@@ -11,6 +11,20 @@ return {
     delete_check_events = "TextChanged",
   },
   config = function(_, opts)
+    local types = require "luasnip.util.types"
+    opts.ext_opts = {
+      [types.choiceNode] = {
+        active = {
+          virt_text = { { "●", "Cursor" } },
+        },
+      },
+      [types.insertNode] = {
+        active = {
+          virt_text = { { "●", "Cursor" } },
+        },
+      },
+    }
+
     require("luasnip").setup(opts)
     local ls = require "luasnip"
     local snippets_path = vim.api.nvim_get_runtime_file("snippets/*.lua", true)

@@ -1,6 +1,6 @@
 ---
 devel_gui: true
-devel_vscode: true
+devel_zed: true
 devel_android_studio: false
 devel_langs:
   - python

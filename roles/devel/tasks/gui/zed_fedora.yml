@@ -1,0 +1,5 @@
+---
+- name: Install Zed editor
+  community.general.flatpak:
+    name: dev.zed.Zed
+    state: present

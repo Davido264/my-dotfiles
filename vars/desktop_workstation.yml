@@ -9,7 +9,7 @@ virt_nested_virt: true
 virt_containers: true
 
 devel_gui: true
-devel_vscode: true
+devel_zed: true
 devel_android_studio: true
 devel_langs:
   - c

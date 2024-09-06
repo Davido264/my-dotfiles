@@ -41,7 +41,7 @@ M.servers = vim.tbl_deep_extend("force", minimal.servers, {
 
   ---- Rarely using ----
   -- Dart (Included with dart)
-  -- "dartls"
+  "dartls",
   --
   -- F#
   -- "fsautocomplete",

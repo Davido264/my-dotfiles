@@ -1,16 +1,28 @@
 ---
 # TODO: Install flutter w/o dying
-#
-# - name: Install Dart Tooling
-#   community.general.pacman:
-#     name:
-#       - dart
-#     state: present
 
-# - name: Install Dart Tooling (AUR)
-#   become: true
-#   become_user: '{{ ansible_user }}'
-#   kewlfft.aur.aur:
-#     name:
-#       - flutter
-#     state: present
+- name: Flutter | Install Flutter from AUR
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name:
+      - flutter-bin
+      - android-sdk-cmdline-tools-latest
+      - android-platform
+      - android-sdk-platform-tools
+      - android-sdk-build-tools
+      - android-emulator
+    state: present
+  when: ansible_facts["distribution"] == "Archlinux"
+
+- name: Flutter | Add Java ASDF Flutter
+  become_user: '{{ ansible_user }}'
+  become: false
+  ansible.builtin.shell:
+    executable: /bin/sh
+    cmd: >
+      export ASDF_DIR="$HOME/.local/share/asdf";
+      . "$HOME/.local/share/asdf/asdf.sh";
+      asdf plugin add flutter https://github.com/fejzuli/asdf-flutter.git &&
+      asdf global flutter system
+    creates: /home/{{ ansible_user }}/.local/share/asdf/plugins/java

@@ -37,7 +37,7 @@ return {
     setup = {
       ["jdtls"] = require("david.lsp.jdtls").setup,
       ["tsserver"] = require("david.lsp.tsserver").setup,
-      ["eslint"] = false,
+      -- ["eslint"] = false,
     },
   },
   config = function(_, opts)
@@ -85,13 +85,14 @@ return {
     end
 
     local mappings = require("mason-lspconfig").get_mappings().mason_to_lspconfig
-    local servers = vim.tbl_deep_extend(
-      "keep",
-      require("mason-lspconfig").get_installed_servers(),
-      vim.tbl_map(function(v)
-        return mappings[v] or v
-      end, require("david.lsp.servers." .. mode).servers)
-    )
+    local servers = require("mason-lspconfig").get_installed_servers()
+
+    for _,v in ipairs(require("david.lsp.servers." .. mode).servers) do
+      local srv = mappings[v] or v
+      if not vim.tbl_contains(servers, srv) then
+        table.insert(servers,srv)
+      end
+    end
 
     for _, name in ipairs(servers) do
       setup(name)

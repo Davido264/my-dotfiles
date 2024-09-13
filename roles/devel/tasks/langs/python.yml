@@ -40,5 +40,5 @@
   become_user: '{{ ansible_user }}'
   stow:
     dir: '{{ playbook_dir }}/stow'
-    package: pylint
+    package: python
     state: supress

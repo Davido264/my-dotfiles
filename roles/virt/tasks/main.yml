@@ -10,10 +10,9 @@
       when: virt_vms
       block:
         - name: Virtual Machines | Perform platform tasks
-          ansible.builtin.include_tasks: '{{ lookup("first_found",__virt_vm_paths) }}'
-          vars:
-            __virt_vm_paths:
-              files:
+          ansible.builtin.include_tasks: '{{ item }}'
+          with_first_found:
+            - files:
                 - 'vms_{{ ansible_facts["distribution"] | lower }}.yml'
               paths:
                 - '{{ role_path }}/tasks'

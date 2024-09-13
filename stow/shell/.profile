@@ -6,6 +6,8 @@ export XDG_STATE_HOME="${XDG_STATE_HOME:-${HOME}/.local/state}"
 export GOBIN="${XDG_DATA_HOME}/go/bin"
 export GOPATH="${XDG_DATA_HOME}/go"
 
+export WINEPREFIX="${XDG_DATA_HOME}/wine"
+
 export ASDF_DIR="${XDG_DATA_HOME}/asdf"
 export ASDF_DATA_DIR="${ASDF_DIR}"
 export ASDF_CONFIG_FILE="${XDG_CONFIG_HOME}/asdf/config"
@@ -24,13 +26,19 @@ export DOTNET_CLI_HOME="${XDG_DATA_HOME}/dotnet"
 export NUGET_PACKAGES="${XDG_CACHE_HOME}/NuGetPackages"
 
 export PYTHON_HISTORY="${XDG_STATE_HOME}/python/history"
+export PYTHONSTARTUP="${XDG_CONFIG_HOME}/python/pythonrc"
 
 export ANDROID_USER_HOME="${XDG_DATA_HOME}/android"
+export ANDROID_SDK_ROOT="${XDG_DATA_HOME}/android-sdk"
+export ANDROID_HOME="${ANDROID_SDK_ROOT}"
+export ANDROID_EMULATOR_HOME="${XDG_DATA_HOME}/android-emulator"
+export ANDROID_NDK="${ANDROID_SDK_ROOT}/ndk"
+export ANDROID_NDK_HOME="${ANDROID_NDK}"
 
 export AWS_SHARED_CREDENTIALS_FILE="${XDG_CONFIG_HOME}/aws/credentials"
 export AWS_CONFIG_FILE="${XDG_CONFIG_HOME}/aws/config"
 
-export _JAVA_OPTIONS="-Djava.util.prefs.userRoot=${XDG_CONFIG_HOME}/java"
+# export _JAVA_OPTIONS="-Djava.util.prefs.userRoot=${XDG_CONFIG_HOME}/java"
 export GRADLE_USER_HOME="${XDG_DATA_HOME}/gradle"
 
 export GTK2_RC_FILES="${XDG_CONFIG_HOME}/gtk-2.0/gtkrc"

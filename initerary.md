@@ -1,4 +1,12 @@
 # TODO
+- [ ] Setup waydroid
+
+- [ ] Move android sdk and ndk stuff to asdf?
+    - not posible, use sdkmanager installed manually
+- [ ] Test with a fedora and arch container the size of shell_env and set caps to shell_env minimal and full
+    - Mary Kondo styling? maybe styling will be just for full, but idk. I'm not going to run this on a server.
+
+
 - [ ] make matugen/config.toml a template to dynamically add templates and avoiding create unnecesary directories
 
 - [ ] Learn Reaper (3h video)

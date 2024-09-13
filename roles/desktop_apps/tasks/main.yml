@@ -1,19 +1,17 @@
 ---
 - block:
     - name: Perform platform tasks
-      ansible.builtin.include_tasks: '{{ lookup("first_found",__desktop_apps_tasks) }}'
-      vars:
-        __desktop_apps_tasks:
-          files:
+      ansible.builtin.include_tasks: '{{ item }}'
+      with_first_found:
+        - files:
             - '{{ ansible_facts["distribution"] | lower }}.yml'
           paths:
             - '{{ role_path }}/tasks'
 
     - name: Set platform specific vars
-      ansible.builtin.include_vars: '{{ lookup("first_found",__desktop_apps_vars) }}'
-      vars:
-        __desktop_apps_vars:
-          files:
+      ansible.builtin.include_vars: '{{ item }}'
+      with_first_found:
+        - files:
             - '{{ ansible_facts["distribution" ] | lower }}.yml'
           paths:
             - '{{ role_path }}/vars'

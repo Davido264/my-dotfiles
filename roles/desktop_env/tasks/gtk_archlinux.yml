@@ -26,3 +26,10 @@
   kewlfft.aur.aur:
     name: adw-gtk3
     state: present
+
+- name: Install Morewaita (AUR)
+  become: true
+  become_user: '{{ ansible_user }}'
+  kewlfft.aur.aur:
+    name: morewaita
+    state: present

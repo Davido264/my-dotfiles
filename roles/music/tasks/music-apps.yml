@@ -10,10 +10,9 @@
     state: present
 
 - name: Perform platform tasks
-  ansible.builtin.include_tasks: '{{ lookup("first_found",__music_music_apps_paths) }}'
-  vars:
-    __music_music_apps_paths:
-      files:
+  ansible.builtin.include_tasks: '{{ item }}'
+  with_first_found:
+    - files:
         - 'music-apps_{{ ansible_facts["distribution"] | lower  }}.yml'
       paths:
         - '{{ role_path }}/tasks'

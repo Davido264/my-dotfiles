@@ -17,3 +17,15 @@
   ansible.builtin.dnf:
     name: adw-gtk3-theme
     state: present
+
+- name: Install Morewaita
+  block:
+    - name: Install Morewaita | Add COPR for Morewaita
+      community.general.copr:
+        name: dusansimic/themes
+        state: present
+
+    - name: Install Morewaita | Install icon theme
+      ansible.builtin.dnf:
+        name: morewaita-icon-theme
+        state: present

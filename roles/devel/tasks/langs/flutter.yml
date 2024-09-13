@@ -1,19 +1,20 @@
 ---
-# TODO: Install flutter w/o dying
-
 - name: Flutter | Install Flutter from AUR
   become: true
   become_user: '{{ ansible_user }}'
   kewlfft.aur.aur:
     name:
       - flutter-bin
-      - android-sdk-cmdline-tools-latest
-      - android-platform
-      - android-sdk-platform-tools
-      - android-sdk-build-tools
       - android-emulator
+      - android-sdk-cmdline-tools-latest
     state: present
   when: ansible_facts["distribution"] == "Archlinux"
+
+# TODO: Sdkmanager on a different file
+- name: Install sdkmanager base packages
+  ansible.builtin.shell:
+    cmd: yes | sdkmanager 'platform-tools' --sdk_root /home/{{ ansible_user }}/.local/share/android-sdk
+    creates: /home/{{ ansible_user }}/.local/share/android-sdk/platform-tools
 
 - name: Flutter | Add Java ASDF Flutter
   become_user: '{{ ansible_user }}'

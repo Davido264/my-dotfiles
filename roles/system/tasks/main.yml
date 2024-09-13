@@ -1,10 +1,9 @@
 ---
 - block:
     - name: Perform platform tasks
-      ansible.builtin.include_tasks: '{{ lookup("first_found",__system_setup_paths) }}'
-      vars:
-        __system_setup_paths:
-          files:
+      ansible.builtin.include_tasks: '{{ item }}'
+      with_first_found:
+        - files:
             - '{{ ansible_facts["distribution"] | lower }}.yml'
           paths:
             - '{{ role_path }}/tasks'
@@ -51,15 +50,14 @@
           - power
 
     - name: Include Android Udev tasks
-      ansible.builtin.include_tasks: '{{ lookup("first_found", __system_udev_android_tasks) }}'
-      when: system_udev_android
-      vars:
-        __system_udev_android_tasks:
-          files:
+      ansible.builtin.include_tasks: '{{ item }}'
+      with_first_found:
+        - files:
             - 'udev_android_{{ ansible_facts["distribution"] | lower }}.yml'
             - 'udev_android_default.yml'
           paths:
             - '{{ role_path }}/tasks'
+      when: system_udev_android
 
     - name: Map HOME_PAGE to ESC
       when: system_udev_remap_home_esc

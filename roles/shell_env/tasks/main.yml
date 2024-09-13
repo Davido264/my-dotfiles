@@ -1,20 +1,18 @@
 ---
 - block:
     - name: Perform platform tasks
-      ansible.builtin.include_tasks: '{{ lookup("first_found",__shell_env_extra_paths) }}'
-      vars:
-        __shell_env_extra_paths:
-          files:
+      ansible.builtin.include_tasks: '{{ item }}'
+      with_first_found:
+        - files:
             - '{{ ansible_facts["distribution"] | lower }}.yml'
           paths:
             - '{{ role_path }}/tasks'
           skip: true
 
     - name: Set platform specific variables
-      ansible.builtin.include_vars: '{{ lookup("first_found", __shell_env_extra_paths)}}'
-      vars:
-        __shell_env_extra_paths:
-          files:
+      ansible.builtin.include_vars: '{{ item }}'
+      with_first_found:
+        - files:
             - '{{ ansible_facts["distribution"] | lower }}.yml'
             - 'default.yml'
           paths:
@@ -96,6 +94,7 @@
           - traceroute
           - zoxide
           - gum
+          - glow
           - '{{ __shell_env_bind_utils_package }}'
           - '{{ __shell_env_imagemagick_package }}'
           - '{{ __shell_env_pandoc_package }}'
@@ -114,10 +113,9 @@
 
     - name: Perform Starship tasks
       when: shell_env_mode == 'fancy'
-      ansible.builtin.include_tasks: '{{ lookup("first_found",__shell_env_starship_install) }}'
-      vars:
-        __shell_env_starship_install:
-          files:
+      ansible.builtin.include_tasks: '{{ item }}'
+      with_first_found:
+        - files:
             - 'starship_{{ ansible_facts["distribution"] | lower }}.yml'
             - 'starship_default.yml'
           paths:
@@ -147,6 +145,7 @@
         - yt-dlp
         - tmux
         - neovim
+        - glow
 
     - name: Setup LSP and tooling tier for neovim
       tags: dotfiles, dot

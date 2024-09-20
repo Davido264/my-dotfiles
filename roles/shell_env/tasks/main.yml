@@ -59,6 +59,7 @@
         name:
           - coreutils
           - curl
+          - plocate
           - zip
           - unzip
           - wget
@@ -95,6 +96,7 @@
           - zoxide
           - gum
           - glow
+          - whois
           - '{{ __shell_env_bind_utils_package }}'
           - '{{ __shell_env_imagemagick_package }}'
           - '{{ __shell_env_pandoc_package }}'

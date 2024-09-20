@@ -36,4 +36,5 @@ nmap gD :action GotoDeclaration<CR>
 nmap gi :action GotoImplementation<CR>
 nmap go :action GotoTypeDeclaration<CR>
 nmap <leader>vcd :action ActivateProblemsViewToolWindow<CR>
-nmap <leader>vca :action ShowIntentionActions
+nmap <leader>vca :action ShowIntentionActions<CR>
+nmap <C-y> :action EditorChooseLookupItemReplace<CR>

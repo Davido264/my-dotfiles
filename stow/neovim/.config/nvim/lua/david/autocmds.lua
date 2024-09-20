@@ -8,32 +8,32 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
-vim.api.nvim_create_autocmd("ColorScheme", {
-  callback = function()
-    vim.opt.cursorline = true
-
-    vim.api.nvim_set_hl(0, "CursorLineNR", {
-      bg = "none",
-      bold = true,
-    })
-
-    vim.api.nvim_set_hl(0, "CursorLine", {
-      bg = "none",
-    })
-
-    if vim.fn.exists "g:neovide" == 0 then
-      vim.api.nvim_set_hl(0, "Normal", {
-        bg = "none",
-        ctermbg = "none",
-      })
-    end
-
-    vim.api.nvim_set_hl(0, "SpellBad", {
-      undercurl = true,
-      bold = true,
-    })
-  end,
-})
+-- vim.api.nvim_create_autocmd("ColorScheme", {
+--   callback = function()
+--     vim.opt.cursorline = true
+-- 
+--     vim.api.nvim_set_hl(0, "CursorLineNR", {
+--       bg = "none",
+--       bold = true,
+--     })
+-- 
+--     vim.api.nvim_set_hl(0, "CursorLine", {
+--       bg = "none",
+--     })
+-- 
+--     if vim.fn.exists "g:neovide" == 0 then
+--       vim.api.nvim_set_hl(0, "Normal", {
+--         bg = "none",
+--         ctermbg = "none",
+--       })
+--     end
+-- 
+--     vim.api.nvim_set_hl(0, "SpellBad", {
+--       undercurl = true,
+--       bold = true,
+--     })
+--   end,
+-- })
 
 -- neovim for writting
 vim.api.nvim_create_autocmd("FileType", {
